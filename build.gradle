@@ -1,0 +1,117 @@
+plugins {
+    id "de.undercouch.download" version "3.4.3"
+}
+
+apply plugin: 'de.undercouch.download'
+apply plugin: 'maven'
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+[compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
+
+// In this section you declare where to find the dependencies of your project
+repositories {
+    maven {
+        url "http://maven.aliyun.com/nexus/content/groups/public/"
+    }
+    mavenLocal()
+    mavenCentral()
+}
+
+import de.undercouch.gradle.tasks.download.Download
+
+task downsdk(type: Download) {
+	
+		src 'https://github.com/FISCO-BCOS/web3sdk/releases/download/V1.2.1/web3sdk-1.2.1.jar'
+		dest 'lib'
+		overwrite false
+}
+check.dependsOn downsdk
+build.shouldRunAfter downsdk
+
+List logger = [
+	"org.slf4j:jul-to-slf4j:1.7.10",
+	"org.apache.logging.log4j:log4j-api:2.1",
+	"org.apache.logging.log4j:log4j-core:2.1",
+	"org.apache.logging.log4j:log4j-slf4j-impl:2.1",
+	"org.apache.logging.log4j:log4j-web:2.1"
+]
+
+def spring_version="4.1.8.RELEASE"
+List spring =[ 
+	"org.springframework:spring-core:$spring_version", 
+	"org.springframework:spring-beans:$spring_version", 
+	"org.springframework:spring-context:$spring_version", 
+	"org.springframework:spring-tx:$spring_version", 
+	"org.springframework:spring-jdbc:$spring_version", 
+	"org.springframework:spring-test:$spring_version"
+]
+
+// In this section you declare the dependencies for your production and test code
+dependencies {
+    compile logger,spring
+    runtime logger,spring
+    
+    compile "com.fasterxml.jackson.core:jackson-databind:2.8.8.1"
+    runtime "com.fasterxml.jackson.core:jackson-databind:2.8.8.1"
+   	compile 'mysql:mysql-connector-java:5.1.30'
+   	runtime 'mysql:mysql-connector-java:5.1.30'
+   	compile 'org.mybatis:mybatis:3.2.8'
+   	runtime 'org.mybatis:mybatis:3.2.8'
+   	compile 'org.mybatis:mybatis-spring:1.2.2'
+   	runtime 'org.mybatis:mybatis-spring:1.2.2'
+   	compile 'io.netty:netty-all:4.1.15.Final'
+    runtime 'io.netty:netty-all:4.1.15.Final'
+   	compile files('lib/web3sdk-1.2.1.jar')
+   	compile 'org.apache.commons:commons-text:1.2'
+   	runtime 'org.apache.commons:commons-text:1.2'
+   	
+   	compile 'org.junit.platform:junit-platform-commons:1.1.0'
+   	runtime 'org.junit.platform:junit-platform-commons:1.1.0'
+   	
+   	compile 'org.junit.jupiter:junit-jupiter-api:5.1.0'
+   	runtime 'org.junit.jupiter:junit-jupiter-api:5.1.0'
+   	
+   	compile 'org.apache.commons:commons-dbcp2:2.2.0'
+   	runtime 'org.apache.commons:commons-dbcp2:2.2.0'
+   	
+   	compile 'org.apache.commons:commons-collections4:4.1'
+   	runtime 'org.apache.commons:commons-collections4:4.1'
+}
+
+sourceSets {
+	main {
+		java {
+	        srcDir 'src/main/java'
+		}
+        resources  {
+            srcDir 'src/main/resources'
+        }
+	}
+}
+
+jar {
+	destinationDir file('dist/apps')
+	archiveName project.name + '.jar'
+	exclude '**/*.xml'
+	exclude '**/*.properties'
+	exclude 'doc/*'
+
+    doLast {
+        copy {
+            from file('src/main/resources/')
+            into 'dist/conf'
+        }
+		copy {
+			from configurations.runtime
+			into 'dist/lib'
+		}
+		copy {
+			from file('.').listFiles().findAll{File f -> (f.name.endsWith('.bat') || f.name.endsWith('.sh') || f.name.endsWith('.env'))}
+			into 'dist'
+		}
+	}
+}

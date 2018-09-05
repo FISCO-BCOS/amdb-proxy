@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.bcos.amdb.dao.DataMapper">
+
+	<select id="getTable" resultType="map">
+		select key_field, value_field from _sys_tables_ where table_name = #{table_name}
+	</select>
+	
+	<update id="createTable" parameterType="java.lang.String">
+		${sql}
+	</update>
+	
+	<select id="queryData" resultType="map">
+		select * from ${table} where _num_ &lt; #{num} and ${key_field} = #{key_value}
+	</select>
+	
+	<select id="queryAllData" resultType="map">
+		select * from ${table} where _num_ &lt; #{num}
+	</select>
+	 
+	<insert id="commitData" parameterType="java.util.List">
+	        replace into ${table}(${fields}`_hash_`,`_num_`)
+	        values
+	        <foreach collection="list" item="item" index="index" separator=",">
+	            (${item.values}#{item.hash},#{item.num})
+	        </foreach>
+    </insert>
+    
+    <update id="createSysTables" >
+		CREATE TABLE IF NOT EXISTS `_sys_tables_` (
+		  `_id_`  int unsigned auto_increment,
+		  `_hash_` varchar(128) default '',
+		  `_num_` int(11) default 0,
+		   `_status_` int(11) default 0,
+		  `table_name` varchar(256) default '',
+		  `key_field` varchar(1024) default '',
+		  `value_field` varchar(1024) default '',
+		   PRIMARY KEY (`_id_`),
+		   UNIQUE KEY (table_name)
+		) ENGINE=InnoDB default charset=utf8mb4;
+	</update>
+    
+    <update id="createSysMiners" >
+		CREATE TABLE IF NOT EXISTS `_sys_miners_` (
+		  `_id_`  int unsigned auto_increment,
+		  `_hash_` varchar(128),
+		  `_num_` int(11),
+		  `_status_` int(11),
+		  `node_id` varchar(256),
+		  PRIMARY KEY (`_id_`),
+		  KEY (_num_),
+		  UNIQUE KEY (node_id)
+		) engine=innodb default charset=utf8mb4; 
+	</update>
+	
+	<insert id="insertSysTables">
+		insert ignore into  `_sys_tables_` ( `table_name` , `key_field`, `value_field`) values 
+		('_sys_tables_', 'table_name','key_field,value_field'),
+		('_sys_miners_', 'node_id','');
+	</insert>
+	
+</mapper>
