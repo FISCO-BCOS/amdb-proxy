@@ -24,9 +24,8 @@ repositories {
 import de.undercouch.gradle.tasks.download.Download
 
 task downsdk(type: Download) {
-	
 		src 'https://github.com/FISCO-BCOS/web3sdk/releases/download/V1.2.1/web3sdk-1.2.1.jar'
-		dest 'lib'
+		dest 'lib/web3sdk-1.2.1.jar'
 		overwrite false
 }
 check.dependsOn downsdk
