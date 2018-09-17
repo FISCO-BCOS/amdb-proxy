@@ -48,17 +48,19 @@
 		  `_hash_` varchar(128),
 		  `_num_` int(11),
 		  `_status_` int(11),
+		  `type` varchar(256),
 		  `node_id` varchar(256),
+		  `enable_num` varchar(256),
 		  PRIMARY KEY (`_id_`),
 		  KEY (_num_),
-		  UNIQUE KEY (node_id)
+		  KEY (type)
 		) engine=innodb default charset=utf8mb4; 
 	</update>
 	
 	<insert id="insertSysTables">
 		insert ignore into  `_sys_tables_` ( `table_name` , `key_field`, `value_field`) values 
 		('_sys_tables_', 'table_name','key_field,value_field'),
-		('_sys_miners_', 'node_id','');
+		('_sys_miners_', 'type','node_id,enable_num');
 	</insert>
 	
 </mapper>
