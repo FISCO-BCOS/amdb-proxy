@@ -13,7 +13,7 @@ public class ServerTest {
 		String [] args = null;
 		main.main(args);
 		
-		MockService.throwEx = true;
+		new MockService().setThrowEx(true);
 		main.main(args);
 	}
 }

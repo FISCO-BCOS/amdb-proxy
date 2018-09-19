@@ -59,16 +59,12 @@ public class DBService {
         throw new Exception("无法解析header.op:" + content);
       }
 
-      // switch (header.getOp()) {
       if (header.getOp().equals("info")) {
-        // case "info": {
         Request<InfoRequest> request =
             objectMapper.readValue(content, new TypeReference<Request<InfoRequest>>() {});
         result = info(request.getParams());
 
-        // break;
       } else if (header.getOp().equals("select")) {
-        // case "select": {
         Request<SelectRequest> request =
             objectMapper.readValue(content, new TypeReference<Request<SelectRequest>>() {});
 
@@ -80,10 +76,7 @@ public class DBService {
           result = select(params);
         }
 
-        // break;
       } else if (header.getOp().equals("commit")) {
-        // case "commit": {
-        // 解析请求数据
         Request<CommitRequest> request =
             objectMapper.readValue(content, new TypeReference<Request<CommitRequest>>() {});
 
@@ -104,12 +97,10 @@ public class DBService {
           logger.debug("空操作！-----------------");
         }
       } else {
-        // default: {
         logger.error("未知请求:{}", header.getOp());
 
         throw new Exception("未知请求:" + header.getOp());
       }
-      // }
 
       response.setCode(0);
     } catch (Exception e) {
@@ -122,7 +113,6 @@ public class DBService {
       response.setResult(result);
     } else {
       logger.error("result为null");
-      // response.setResult(-1);
     }
 
     String out;
@@ -134,8 +124,11 @@ public class DBService {
   private InfoResponse info(InfoRequest request) throws IOException {
     String table = request.getTable();
     Table info = getTable(table);
-
     InfoResponse response = new InfoResponse();
+    if(info == null)
+    {
+        return response;
+    }
     response.setKey(info.getKey());
     response.setIndices(info.getIndices());
 
@@ -147,9 +140,13 @@ public class DBService {
     Integer num = request.getNum();
     Table info = getTable(table);
     String key = request.getKey();
-
-    List<Map<String, Object>> data = null;
+    SelectResponse response = new SelectResponse();
     
+    if(info == null)
+    {
+        return response;
+    }
+    List<Map<String, Object>> data = null;
     Cache cache = info.getCache();
     CacheEntry entry = null;
     if (cache != null) {
@@ -185,8 +182,6 @@ public class DBService {
         cache.set(entry.getKey(), entry);
       }
     }
-
-    SelectResponse response = new SelectResponse();
 
     if (!data.isEmpty()) {
       Map<String, Object> f = data.get(0);
