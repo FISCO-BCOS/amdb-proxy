@@ -19,7 +19,7 @@ public class Main {
 		try {
 			service.run();
 		} catch (Exception e) {
-			e.printStackTrace();
+		    logger.debug(e.getMessage());
 		}
 	}
 
