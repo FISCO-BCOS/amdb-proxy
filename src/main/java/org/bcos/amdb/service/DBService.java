@@ -41,9 +41,15 @@ public class DBService {
 
   @PostConstruct
   public void initTables() {
-    dataMapper.createSysTables();
-    dataMapper.insertSysTables();
-    dataMapper.createSysMiners();
+    logger.info("start create table:");
+    try {
+        dataMapper.createSysTables();
+        dataMapper.insertSysTables();
+        dataMapper.createSysMiners();
+    } catch (Exception e) {
+       logger.debug("create table error: "+e.getMessage());
+    }
+    logger.info("create table successful!");
   }
 
   public String process(String content) throws JsonProcessingException {
