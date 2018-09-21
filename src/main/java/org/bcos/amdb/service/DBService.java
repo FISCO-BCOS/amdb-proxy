@@ -367,7 +367,7 @@ public class DBService {
         .append("(\n").append(" `_id_` int unsigned auto_increment,\n")
         .append(" `_hash_` varchar(128) not null,\n").append("  `_num_` int not null,\n")
         .append("`_status_` int not null,\n").append("`").append(key).append("`")
-        .append(" varchar(256) default '',\n");
+        .append(" varchar(128) default '',\n");
     if (!"".equals(values[0].trim())) {
       for (String value : values) {
         sql.append(" `").append(getStrSql(value)).append("` varchar(2048) default '',\n");
