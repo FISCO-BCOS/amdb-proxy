@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.ibatis.exceptions.PersistenceException;
 import org.bcos.amdb.cache.Cache;
 import org.bcos.amdb.cache.CacheEntry;
 import org.bcos.amdb.cache.CacheValues;
@@ -351,7 +350,7 @@ public class DBService {
     String key = fields.get(0).get("key_field");
     String value_field = fields.get(0).get("value_field");
     String[] values = value_field.split(",");
-    String sql = getSql(table_name, key, values);
+    String sql = getSql(getStrSql(table_name), getStrSql(key), values);
     dataMapper.createTable(sql);
 
   }
@@ -365,7 +364,7 @@ public class DBService {
         .append(" varchar(256) default '',\n");
     if (!"".equals(values[0].trim())) {
       for (String value : values) {
-        sql.append(" `").append(value).append("` varchar(2048) default '',\n");
+        sql.append(" `").append(getStrSql(value)).append("` varchar(2048) default '',\n");
       }
     }
     sql.append(" PRIMARY KEY( `_id_` ),\n").append(" KEY(`").append(key).append("`),\n")
@@ -379,6 +378,12 @@ public class DBService {
     replaceStr = replaceStr.replace('\"', '_');
     return replaceStr;
 
+  }
+  private String getStrSql(String str) {
+      String strSql = str;
+      strSql = strSql.replace("\\", "\\\\");
+      strSql = strSql.replace("`", "\\`");
+      return strSql;  
   }
 
   public DataMapper getDataMapper() {
