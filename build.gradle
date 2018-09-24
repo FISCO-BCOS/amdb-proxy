@@ -104,6 +104,10 @@ jar {
             from file('src/main/resources/')
             into 'dist/conf'
         }
+        copy {
+            from file('src/main/script/')
+            into 'dist/'
+        }
 		copy {
 			from configurations.runtime
 			into 'dist/lib'

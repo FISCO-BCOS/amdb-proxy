@@ -42,7 +42,7 @@
 					<bean class="org.bcos.channel.handler.ChannelConnections">
 						<property name="connectionsStr">
 							<list>
-								<value>WB@127.0.0.1:5051</value> <!-- 区块链节点的ip端口配置 -->
+								<value>WB@127.0.0.1:30301</value> <!-- 区块链节点的ip端口配置 -->
 							</list>
 						</property>
 					</bean>
