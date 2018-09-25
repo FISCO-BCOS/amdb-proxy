@@ -16,25 +16,28 @@
 	<context:annotation-config />
 	<context:component-scan base-package="org.bcos" />
 	
-	<!-- mybatis配置，固定 -->
-	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="locations" value="classpath:db.properties" />
-	</bean>
+	<!-- database and amdb node properties configuration-->
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">  
+        <property name="locations">  
+           <list>  
+              <value>classpath:db.properties</value>  
+              <value>classpath:amdb.properties</value>  
+            </list>  
+        </property>  
+    </bean> 
 
-	<!-- mybatis配置，固定 -->
+	<!-- mybatis configuration -->
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
 		<property name="basePackage" value="org.bcos.amdb.dao" />
 	</bean>
-	
-	<!-- mybatis配置，固定 -->
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
 		<property name="mapperLocations" value="classpath:/mappers/*.xml" />
 	</bean>
 	
-	<!-- AMOP配置，用于与节点通讯 -->
+	<!-- AMOP configuration -->
 	<bean id="DBChannelService" class="org.bcos.channel.client.Service">
-		<property name="connectSeconds" value="3600" /> <!-- 启动前等待连接节点的时间 -->
+		<property name="connectSeconds" value="3600" /> <!-- The time to wait for the connection node before starting -->
 		<property name="orgID" value="WB" />
 		<property name="allChannelConnections">
 			<map>
@@ -42,17 +45,17 @@
 					<bean class="org.bcos.channel.handler.ChannelConnections">
 						<property name="connectionsStr">
 							<list>
-								<value>WB@127.0.0.1:30301</value> <!-- 区块链节点的ip端口配置 -->
+								<value>${node.name}@${node.ip}:${node.channelport}</value>
 							</list>
 						</property>
 					</bean>
 				</entry>
 			</map>
 		</property>
-		<!-- 区块链topic设置，需要与节点的通讯topic配置一致 -->
+		<!-- communication topic configuration of the node -->
 		<property name="topics">
 			<list>
-				<value>DB</value>
+				<value>${node.topic}</value>
 			</list>
 		</property>
 		<property name="pushCallback" ref="DBHandler"/>
@@ -61,7 +64,7 @@
 	<bean id="DBService" class="org.bcos.amdb.service.DBService">
 	</bean>
 
-	<!-- 数据库连接信息配置 -->
+	<!-- database connection configuration -->
 	 <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
 		<property name="url" value="jdbc:mysql://${db.ip}:${db.port}/${db.database}?characterEncoding=UTF-8&amp;zeroDateTimeBehavior=convertToNull" />
