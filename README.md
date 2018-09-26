@@ -169,7 +169,7 @@ node.listen_port=30301
 node.topic=DB
 ```
 
-db.properties 为连接数据库的配置文件，具体配置内容如下。
+db.properties 为连接数据库的配置文件，具体配置内容如下:
 ```properties
 # 数据库服务所在的ip
 db.ip=127.0.0.1
