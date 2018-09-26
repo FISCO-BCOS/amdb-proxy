@@ -45,7 +45,7 @@
 					<bean class="org.bcos.channel.handler.ChannelConnections">
 						<property name="connectionsStr">
 							<list>
-								<value>${node.name}@${node.ip}:${node.listen_port}</value>
+								<value>WB@${node.ip}:${node.listen_port}</value>
 							</list>
 						</property>
 					</bean>

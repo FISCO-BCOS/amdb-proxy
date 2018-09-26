@@ -16,7 +16,7 @@ AMDB 支持两种状态数据库配置，即 leveldb 和 amop 配置模式。
 ## **1 leveldb 配置模式**
 
 leveldb 配置模式是节点配置的默认方式，节点可以直接访问 leveldb 分布式存储服务，其逻辑架构图如下：
-<img src="src/main/resources/doc/leveldb.png"/>
+<img src="leveldb.png"/>
 
 ### **1.1 节点配置**
 FISCO-BCOS1.5 版本中的节点配置文件为 config.conf，其中 [statedb] 部分为 AMDB 的状态数据库配置。将 type 配置为 leveldb (默认配置)，可以连接 leveldb 数据库，具体配置如下:
@@ -45,7 +45,7 @@ FISCO-BCOS1.5 版本中的节点配置文件为 config.conf，其中 [statedb] �
 ## **2 amop 配置模式**
 
 选择 amop 配置方式，需要配置 AMDB 数据代理服务，其逻辑架构图如下：
-<img src="src/main/resources/doc/amop.png"/>
+<img src="amop.png"/>
 节点通过 AMDB 数据代理访问 MySQL 数据库，当配置为其他数据库，如 Oracle 也类似访问。
 
 ### **2.1 节点配置**
