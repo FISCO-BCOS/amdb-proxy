@@ -43,6 +43,10 @@
 			<map>
 				<entry key="WB">
 					<bean class="org.bcos.channel.handler.ChannelConnections">
+						<property name="caCertPath" value="classpath:ca.crt" />
+						<property name="clientKeystorePath" value="classpath:client.keystore" />
+						<property name="keystorePassWord" value="${keystorePassWord}" />
+						<property name="clientCertPassWord" value="${clientCertPassWord}" />
 						<property name="connectionsStr">
 							<list>
 								<value>WB@${node.ip}:${node.listen_port}</value>
