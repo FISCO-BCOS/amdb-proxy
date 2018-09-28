@@ -8,14 +8,14 @@ import org.apache.commons.collections4.map.LRUMap;
 public class MemoryCache implements Cache {
 	
 	private Integer cacheSize;
-	//定义一个大小为cacheSize的容器
+	//define map size is cacheSize
 	private LRUMap<String, CacheEntry> map;
-	//使该map线程安全
+	//map thread safety 
 	private Map<String, CacheEntry> cache;
 	private Integer lastCommitNum = 0;
 	
 	public MemoryCache(Integer cacheSize) {
-		//通过spring配置文件注入，给一个默认值1000，当注入失败则为默认值
+		//by spring inject, defaut set 1000
 		if(cacheSize == null) {
 			this.cacheSize = 1000;
 		}else {

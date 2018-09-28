@@ -26,17 +26,17 @@ public class DBHandler extends ChannelPushCallback {
 			resultData = dbService.process(push.getContent());
 		} catch (Exception e) {
 			resultCode = -1;
-			logger.error("处理请求错误", e);
+			logger.error("Process request error", e);
 		}
 		
-		//构造回包
+		//construct back to the package
 		ChannelResponse response = new ChannelResponse();
 		response.setMessageID(push.getMessageID());
 		response.setErrorCode(resultCode);
 		response.setErrorMessage("");
 		response.setContent(resultData);
 		
-		logger.debug("发送响应: {}", response.getContent());
+		logger.debug("Send response: {}", response.getContent());
 		
 		push.sendResponse(response);
 	}
