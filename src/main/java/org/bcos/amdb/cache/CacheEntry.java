@@ -3,7 +3,7 @@ package org.bcos.amdb.cache;
 import java.util.List;
 
 public class CacheEntry {
-	private Integer num; //区块高度
+	private Integer num; //block num
 	private String key;
 	private List<CacheValues> values;
 	

@@ -41,15 +41,15 @@ public class DBService {
 
   @PostConstruct
   public void initTables() {
-    logger.info("start create table:");
+    logger.info("Start create table:");
     try {
         dataMapper.createSysTables();
         dataMapper.insertSysTables();
         dataMapper.createSysMiners();
     } catch (Exception e) {
-       logger.debug("create table error: "+e.getMessage());
+       logger.debug("Create table error: "+e.getMessage());
     }
-    logger.info("create table successful!");
+    logger.info("Create table successful!");
   }
 
   public String process(String content) throws JsonProcessingException {
@@ -57,11 +57,11 @@ public class DBService {
     Object result = null;
 
     try {
-      logger.trace("process收到请求: {}", content);
+      logger.trace("Process receives the request: {}", content);
       Header header = objectMapper.readValue(content, Header.class);
 
       if (header.getOp() == null) {
-        throw new Exception("无法解析header.op:" + content);
+        throw new Exception("Failed to parse header.op:" + content);
       }
 
       if (header.getOp().equals("info")) {
@@ -87,7 +87,7 @@ public class DBService {
 
         try {
           result = commit(request.getParams());
-        } catch (DataAccessException e) {// 处理失败，建表，重发更新请求
+        } catch (DataAccessException e) {// process fail，create table，send request again
           List<TableData> data = request.getParams().getData();
           for (TableData tableData : data) {
             String table_name = tableData.getTable();
@@ -99,17 +99,17 @@ public class DBService {
             result = commit(request.getParams());
           }
         } catch (NullPointerException e2) {
-          logger.debug("空操作！-----------------");
+          logger.debug("Null operation-----------------");
         }
       } else {
-        logger.error("未知请求:{}", header.getOp());
+        logger.error("Unknown request:{}", header.getOp());
 
-        throw new Exception("未知请求:" + header.getOp());
+        throw new Exception("Unknown request:" + header.getOp());
       }
 
       response.setCode(0);
     } catch (Exception e) {
-      logger.error("错误:", e);
+      logger.error("Error:", e);
 
       response.setCode(-1);
     }
@@ -117,7 +117,7 @@ public class DBService {
     if (result != null) {
       response.setResult(result);
     } else {
-      logger.error("result为null");
+      logger.error("Result is null");
     }
 
     String out;
@@ -157,7 +157,7 @@ public class DBService {
     if (cache != null) {
       entry = cache.get(key);
       if (entry != null && num > entry.getNum()) {
-        logger.debug("命中cache:{}", entry.getKey());
+        logger.debug("Cache hit:{}", entry.getKey());
 
         data = entry.getValues().stream().map(v -> {
           return v.getFields();
@@ -166,14 +166,14 @@ public class DBService {
     }
 
     if (data == null) {
-      logger.debug("未命中cache:{}", key);
-      logger.debug("indicesEqualString:{}", info.indicesEqualString());
+      logger.debug("Cache miss:{}", key);
+      logger.debug("IndicesEqualString:{}", info.indicesEqualString());
 
       data = dataMapper.queryData(table, num, info.indicesEqualString(), info.getKey(), key);
 
       if (cache != null && entry == null && cache.getLastCommitNum() != 0
           && (num > cache.getLastCommitNum())) {
-        logger.info("更新cache:{}", key);
+        logger.info("Cache update:{}", key);
 
         entry = new CacheEntry();
         entry.setKey(key);
@@ -218,13 +218,13 @@ public class DBService {
     Map<Table, List<String>> update =
         DBReplace(request.getBlockHash(), request.getNum(), request.getData());
 
-    // DB提交成功后，更新cache
+    // DB commit success，update cache
     for (Map.Entry<Table, List<String>> entry : update.entrySet()) {
       Table table = entry.getKey();
 
       if (table.getCache() != null) {
         for (String key : entry.getValue()) {
-          // request.getNum()+1为了查出刚刚写入的数据
+          // request.getNum()+1 can query the latest data
           List<Map<String, Object>> newData = dataMapper.queryData(table.getName(),
               request.getNum() + 1, table.indicesEqualString(), table.getKey(), key);
 
@@ -261,7 +261,7 @@ public class DBService {
       Table table = getTable(tableData.getTable());
 
       if (table == null) {
-        logger.error("未找到表:{}", tableData.getTable());
+        logger.error("Cannot find the table:{}", tableData.getTable());
         continue;
       }
 
@@ -273,7 +273,7 @@ public class DBService {
 
       Cache cache = table.getCache();
       if (cache != null) {
-        cache.setLastCommitNum(0); // 更新LastCommit为0，暂时禁用该cache的缓存
+        cache.setLastCommitNum(0); // update LastCommit to 0，  temporarily disable cache
       }
 
       for (Entry entry : tableData.getEntries()) {
@@ -301,7 +301,7 @@ public class DBService {
             sbValues.append("',");
           }
 
-          // 要插入的数据批量放入list
+          // batch data to be inserted into the list
           BatchCommitRequest batchCommitRequest = new BatchCommitRequest();
           batchCommitRequest.setHash(hash);
           batchCommitRequest.setNum(num);
@@ -323,7 +323,7 @@ public class DBService {
 
       updateKeys.put(table, keys);
       if (_table != null && _fields != null && list.size() > 0) {
-        // 批量插入数据
+
         dataMapper.commitData(_table, _fields, list);
       }
     }
@@ -335,7 +335,7 @@ public class DBService {
     List<Map<String, String>> fields = dataMapper.getTable(table_name);
     Table table = null;
     if (fields.isEmpty()) {
-      logger.error("无此table");
+      logger.error("Cannot find the table");
     } else {
       table = new Table();
       table.setName(table_name);

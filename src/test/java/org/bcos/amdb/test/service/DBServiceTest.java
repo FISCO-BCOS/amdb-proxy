@@ -71,42 +71,42 @@ public class DBServiceTest {
               return v.split(":")[0];
             }, v -> {
               return v.split(":")[1];
-            }))); // 满足查询条件
+            }))); //satisfy query condition
 
         result.add(Stream.of("field1:key_field", "field2:not_equal", "field3:2")
             .collect(Collectors.toMap(v -> {
               return v.split(":")[0];
             }, v -> {
               return v.split(":")[1];
-            }))); // field2不满足
+            }))); // field2 not satisfy
 
         result.add(
             Stream.of("field1:key_field", "field2:1", "field3:1").collect(Collectors.toMap(v -> {
               return v.split(":")[0];
             }, v -> {
               return v.split(":")[1];
-            }))); // field3不满足
+            }))); // field3 not satisfy
 
         result.add(
             Stream.of("field1:key_field", "field2:1", "field3:2").collect(Collectors.toMap(v -> {
               return v.split(":")[0];
             }, v -> {
               return v.split(":")[1];
-            }))); // field4不满足
+            }))); // field4 not satisfy
 
         result.add(
             Stream.of("field1:key_field", "field2:2", "field3:1").collect(Collectors.toMap(v -> {
               return v.split(":")[0];
             }, v -> {
               return v.split(":")[1];
-            }))); // field5不满足
+            }))); // field5 not satisfy
 
         result.add(
             Stream.of("field1:key_field", "field2:3", "field3:2").collect(Collectors.toMap(v -> {
               return v.split(":")[0];
             }, v -> {
               return v.split(":")[1];
-            }))); // field6不满足
+            }))); // field6 not satisfy
 
         return result;
       }
@@ -129,42 +129,42 @@ public class DBServiceTest {
               return v.split(":")[0];
             }, v -> {
               return v.split(":")[1];
-            }))); // 满足查询条件
+            }))); // satisfy query condition
 
         result.add(Stream.of("field1:key_field", "field2:not_equal", "field3:2")
             .collect(Collectors.toMap(v -> {
               return v.split(":")[0];
             }, v -> {
               return v.split(":")[1];
-            }))); // field2不满足
+            }))); // field2 not satisfy
 
         result.add(
             Stream.of("field1:key_field", "field2:1", "field3:1").collect(Collectors.toMap(v -> {
               return v.split(":")[0];
             }, v -> {
               return v.split(":")[1];
-            }))); // field3不满足
+            }))); // field3 not satisfy
 
         result.add(
             Stream.of("field1:key_field", "field2:1", "field3:2").collect(Collectors.toMap(v -> {
               return v.split(":")[0];
             }, v -> {
               return v.split(":")[1];
-            }))); // field4不满足
+            }))); // field4 not satisfy
 
         result.add(
             Stream.of("field1:key_field", "field2:2", "field3:1").collect(Collectors.toMap(v -> {
               return v.split(":")[0];
             }, v -> {
               return v.split(":")[1];
-            }))); // field5不满足
+            }))); // field5 not satisfy
 
         result.add(
             Stream.of("field1:key_field", "field2:3", "field3:2").collect(Collectors.toMap(v -> {
               return v.split(":")[0];
             }, v -> {
               return v.split(":")[1];
-            }))); // field6不满足
+            }))); // field6 not satisfy
 
         return result;
       }
