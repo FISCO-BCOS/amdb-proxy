@@ -65,7 +65,7 @@
 		<property name="pushCallback" ref="DBHandler"/>
 	</bean>
 	
-	<bean id="DBService" class="org.bcos.amdb.service.DBService">
+	<bean id="DBService" class="org.bcos.amdb.service.DBService" init-method="initTables">
 	</bean>
 
 	<!-- database connection configuration -->
