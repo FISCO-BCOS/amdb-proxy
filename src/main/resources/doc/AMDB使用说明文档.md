@@ -128,7 +128,6 @@ https://github.com/FISCO-BCOS/AMDB.git
 下载后，进入 AMDB 根目录，切换到 dev 分支并编译：
 ```bash
 cd AMDB
-git checkout dev
 gradle build
 ```
 编译成功后根目录下会生成 dist目录，dist 目录结构为如下：
