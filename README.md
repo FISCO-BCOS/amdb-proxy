@@ -121,14 +121,13 @@ mysql> set password for root@localhost = password('123456');
 AMDB 数据代理与区块链节点交互，使用 JSON 数据格式发送和接收请求。
 
 ### **3.1 源码下载与编译**
-源码地址：
+获取源码：
 ```bash
-https://github.com/FISCO-BCOS/AMDB.git
+git clone https://github.com/FISCO-BCOS/AMDB.git
 ```
-下载后，进入 AMDB 根目录，切换到 dev 分支并编译：
+下载后，进入 AMDB 根目录进行编译：
 ```bash
 cd AMDB
-git checkout dev
 gradle build
 ```
 编译成功后根目录下会生成 dist目录，dist 目录结构为如下：
