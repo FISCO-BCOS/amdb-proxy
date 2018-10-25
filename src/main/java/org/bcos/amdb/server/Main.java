@@ -11,7 +11,7 @@ public class Main {
 	private static ApplicationContext context;
 	
 	public static void main(String[] args) {
-		logger.debug("启动AMDB Server");
+		logger.debug("Run AMDB Server");
 		
 		context = new ClassPathXmlApplicationContext(new String[] { "applicationContext.xml" });
 		Service service = context.getBean("DBChannelService", Service.class);
@@ -19,7 +19,7 @@ public class Main {
 		try {
 			service.run();
 		} catch (Exception e) {
-			e.printStackTrace();
+		    logger.debug(e.getMessage());
 		}
 	}
 

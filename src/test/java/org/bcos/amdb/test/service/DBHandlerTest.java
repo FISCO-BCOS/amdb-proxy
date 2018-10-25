@@ -25,7 +25,8 @@ public class DBHandlerTest {
 			}
 		}
 		
-		public Boolean ex = false;
+		private Boolean ex = false;
+		
 	}
 	
 	public class MockDBService extends DBService  {
@@ -42,7 +43,7 @@ public class DBHandlerTest {
 			return "test result";
 		}
 		
-		public Boolean throwEx = false;
+		private Boolean throwEx = false;
 	}
 	
 	MockDBService mockDBService = new MockDBService();

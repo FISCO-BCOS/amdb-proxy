@@ -52,13 +52,13 @@ public class MemoryCacheTest {
 	
 	@Test
 	void testLru() {
-		//测试容器大小参数注入是否成功
+	    //test param size
 		@SuppressWarnings("resource")
 		ApplicationContext context = new ClassPathXmlApplicationContext(new String[] { "applicationContext.xml" });
 		MemoryCache cache = context.getBean(MemoryCache.class);
 		assertEquals(cache.getCacheSize().intValue(), 3);
 		
-		//测试LRU算法是否生效
+		//test LRU
 		CacheEntry entry = new CacheEntry();
 		cache.set("key1", entry);
 		CacheEntry r11 = cache.get("key1");
