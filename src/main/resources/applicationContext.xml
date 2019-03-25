@@ -14,8 +14,7 @@
     http://www.springframework.org/schema/cache/spring-cache.xsd">
 
 	<context:annotation-config />
-	<context:component-scan base-package="org.bcos" />
-	
+	<context:component-scan base-package="org.bcos" />	
 	<!-- database and amdb node properties configuration-->
 	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">  
         <property name="locations">  
@@ -35,34 +34,44 @@
 		<property name="mapperLocations" value="classpath:/mappers/*.xml" />
 	</bean>
 	
-	<!-- AMOP configuration -->
-	<bean id="DBChannelService" class="org.bcos.channel.client.Service">
-		<property name="connectSeconds" value="3600" /> <!-- The time to wait for the connection node before starting -->
-		<property name="orgID" value="WB" />
+	
+	<bean id="groupChannelConnectionsConfig" class="org.fisco.bcos.channel.handler.GroupChannelConnectionsConfig">
 		<property name="allChannelConnections">
-			<map>
-				<entry key="WB">
-					<bean class="org.bcos.channel.handler.ChannelConnections">
-						<property name="caCertPath" value="classpath:ca.crt" />
-						<property name="clientKeystorePath" value="classpath:client.keystore" />
-						<property name="keystorePassWord" value="${keystorePassWord}" />
-						<property name="clientCertPassWord" value="${clientCertPassWord}" />
-						<property name="connectionsStr">
-							<list>
-								<value>WB@${node.ip}:${node.listen_port}</value>
-							</list>
-						</property>
-					</bean>
-				</entry>
-			</map>
+			<list>
+				<bean id="group1"  class="org.fisco.bcos.channel.handler.ChannelConnections">
+					<property name="groupId" value="1" />
+					<property name="connectionsStr">
+						<list>
+							<value>127.0.0.1:20600</value>
+							<value>127.0.0.1:20600</value>
+						</list>
+					</property>
+				</bean>
+				<bean id="group2"  class="org.fisco.bcos.channel.handler.ChannelConnections">
+					<property name="groupId" value="2" />
+					<property name="connectionsStr">
+						<list>
+							<value>127.0.0.1:20602</value>
+							<value>127.0.0.1:20603</value>
+						</list>
+					</property>
+				</bean>
+			</list>
 		</property>
+	</bean>
+	
+	<!-- AMOP configuration -->
+	<bean id="DBChannelService" class="org.fisco.bcos.channel.client.Service">
+		<property name="groupId" value="1" />
+		<property name="orgID" value="fisco" />
+		<property name="allChannelConnections" ref="groupChannelConnectionsConfig"></property>
+		
 		<!-- communication topic configuration of the node -->
 		<property name="topics">
 			<list>
 				<value>${node.topic}</value>
 			</list>
 		</property>
-		<property name="pushCallback" ref="DBHandler"/>
 	</bean>
 	
 	<bean id="DBService" class="org.bcos.amdb.service.DBService" init-method="initTables">

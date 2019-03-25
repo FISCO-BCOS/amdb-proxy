@@ -1,10 +1,26 @@
 package org.bcos.amdb.dto;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.commons.lang3.tuple.Pair;
+
 public class SelectRequest {
+	
 	private String blockHash;
 	private Integer num;
 	private String table;
 	private String key;
+	private String	condition;
+	
+	
+	public String getCondition() {
+		return condition;
+	}
+
+	public void setCondition(String condition) {
+		this.condition = condition;
+	}
 
 	public String getBlockHash() {
 		return blockHash;
@@ -37,4 +53,5 @@ public class SelectRequest {
 	public void setKey(String key) {
 		this.key = key;
 	}
+
 }

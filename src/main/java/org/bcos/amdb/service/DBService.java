@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -13,9 +14,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.text.StringEscapeUtils;
 import org.bcos.amdb.cache.Cache;
 import org.bcos.amdb.cache.CacheEntry;
 import org.bcos.amdb.cache.CacheValues;
@@ -24,6 +32,7 @@ import org.bcos.amdb.dao.DataMapper;
 import org.bcos.amdb.dto.BatchCommitRequest;
 import org.bcos.amdb.dto.CommitRequest;
 import org.bcos.amdb.dto.CommitResponse;
+import org.bcos.amdb.dto.Condition;
 import org.bcos.amdb.dto.Entry;
 import org.bcos.amdb.dto.Header;
 import org.bcos.amdb.dto.InfoRequest;
@@ -34,7 +43,9 @@ import org.bcos.amdb.dto.TableData;
 import org.bcos.amdb.dto.Request;
 import org.bcos.amdb.dto.Response;
 
+
 public class DBService {
+	
     private static Logger logger = LoggerFactory.getLogger(DBService.class);
     private static final String SYSTABLE = "_sys_tables_";
 
@@ -44,6 +55,17 @@ public class DBService {
             dataMapper.createSysTables();
             dataMapper.insertSysTables();
             dataMapper.createSysMiners();
+            //add by darrenyin
+            dataMapper.createSysConsensus();
+            dataMapper.createAccessTables();
+            dataMapper.createCurrentStateTables();
+            dataMapper.createNumber2HashTables();
+            dataMapper.createTxHash2BlockTables();
+            dataMapper.createHash2BlockTables();
+            dataMapper.createCnsTables();
+            dataMapper.createSysConfigTables();
+            dataMapper.createSysBlock2NoncesTables();
+            
         } catch (Exception e) {
             logger.debug("Create table error: " + e.getMessage());
         }
@@ -51,6 +73,7 @@ public class DBService {
     }
 
     public String process(String content) throws JsonProcessingException {
+    	
         Response response = new Response();
         Object result = null;
 
@@ -130,115 +153,134 @@ public class DBService {
 
         return response;
     }
-
-    private SelectResponse select(SelectRequest request) throws DataAccessException {
-        String table = request.getTable();
+    
+    public SelectResponse select(SelectRequest request) throws DataAccessException {
+    	String table = request.getTable();
         Integer num = request.getNum();
         Table info = getTable(table);
         String key = request.getKey();
+        String condition = request.getCondition();
+        logger.debug("key:{} condition:{}",key,condition);
+        JSONArray obj = JSONArray.parseArray(condition);
+        logger.debug("key:{} condition obj:{}",key,obj);
+        Map<String,Condition >	conditionmap = new HashMap<String, Condition >();
+        
+        for(int index=0;index<obj.size();index++)
+        {
+        	JSONObject ss = obj.getJSONObject(index);
+        	String keyFileld = ss.getString("field_key");
+        	int op = ss.getIntValue("op");
+        	String keyValue = 	ss.getString("field_value");
+        	Condition conditionItem  = new Condition();
+        	conditionItem.setOp(Condition.valueOf(op));
+        	conditionItem.setValue(keyValue);
+        	conditionmap.put(keyFileld,conditionItem);
+        }
+        StringBuilder sb = new StringBuilder();
+        Iterator<java.util.Map.Entry<String, Condition>> entries 
+        	= conditionmap.entrySet().iterator();
+        while (entries.hasNext())
+        {
+        	 Map.Entry<String, Condition> entry = entries.next();
+        	 logger.debug("key:{}",entry.getKey());
+        	 Condition value = entry.getValue();
+        	 
+        	 String strKeyEscape = StringEscapeUtils.escapeJava(entry.getKey());
+        	 
+        	 if(value.getOp()  == org.bcos.amdb.dto.Condition.ConditionOp.eq)
+        	 {
+        		 sb.append(" and ").append(strKeyEscape).append(" = ");
+        		 sb.append("'").append(StringEscapeUtils.escapeJava(value.getValue()));
+        		 sb.append("'");
+        	 }
+        	 
+        	 else if(value.getOp()  == org.bcos.amdb.dto.Condition.ConditionOp.ne)
+        	 {
+        		 sb.append(" and ").append(strKeyEscape).append(" != ");
+        		 sb.append("'").append(StringEscapeUtils.escapeJava(value.getValue()));
+        		 sb.append("'");
+        	 }
+        	 
+        	 else if(value.getOp()  == org.bcos.amdb.dto.Condition.ConditionOp.gt)
+        	 {
+        		 sb.append(" and ").append(strKeyEscape).append(">");
+        		 sb.append("'").append(StringEscapeUtils.escapeJava(value.getValue()));
+        		 sb.append("'");
+        	 }
+        	 
+        	 else if(value.getOp()  == org.bcos.amdb.dto.Condition.ConditionOp.ge)
+        	 {
+        		 sb.append(" and ").append(strKeyEscape).append(">=");
+        		 sb.append("'").append(StringEscapeUtils.escapeJava(value.getValue()));
+        		 sb.append("'");
+        	 }
+        	 
+        	 else if(value.getOp()  == org.bcos.amdb.dto.Condition.ConditionOp.lt)
+        	 {
+        		 sb.append(" and ").append(strKeyEscape).append("<");
+        		 sb.append("'").append(StringEscapeUtils.escapeJava(value.getValue()));
+        		 sb.append("'");
+        	 }
+        	 
+        	 else if(value.getOp()  == org.bcos.amdb.dto.Condition.ConditionOp.le)
+        	 {
+        		 sb.append(" and ").append(strKeyEscape).append("<=");
+        		 sb.append("'").append(StringEscapeUtils.escapeJava(value.getValue()));
+        		 sb.append("'");
+        	 }
+        	 else
+        	 {
+        		 logger.error("error condition op:{}",value.getOp());
+        		 continue;
+        	 }
+        }
+        
+        String	conditionsql = sb.toString();
+        logger.debug("condition sql:{}",conditionsql);
+        
         SelectResponse response = new SelectResponse();
-
-        if (info == null) {
-            return response;
-        }
         List<Map<String, Object>> data = null;
-        Cache cache = info.getCache();
-        CacheEntry entry = null;
-        if (cache != null) {
-            entry = cache.get(key);
-            if (entry != null && num > entry.getNum()) {
-                logger.debug("Cache hit:{}", entry.getKey());
-
-                data = entry.getValues().stream().map(v -> {
-                    return v.getFields();
-                }).collect(Collectors.toList());
-            }
-        }
-
-        if (data == null) {
-            logger.debug("Cache miss:{}", key);
-            logger.debug("IndicesEqualString:{}", info.indicesEqualString());
-
-            data = dataMapper.queryData(table, num, info.indicesEqualString(), info.getKey(), key);
-
-            if (cache != null && entry == null && cache.getLastCommitNum() != 0
-                    && (num > cache.getLastCommitNum())) {
-                logger.info("Cache update:{}", key);
-
-                entry = new CacheEntry();
-                entry.setKey(key);
-                entry.setNum(num);
-                entry.setValues(data.stream().map(v -> {
-                    CacheValues value = new CacheValues();
-                    value.setFields(v);
-                    return value;
-                }).collect(Collectors.toList()));
-
-                cache.set(entry.getKey(), entry);
-            }
-        }
-
-        if (!data.isEmpty()) {
+        logger.debug("key:{} table:{} number:{} index{}  key_value:{} condition:{}", 
+        		key,table,num,info.indicesEqualString(),info.getKey(),
+        		conditionsql);
+        
+        data = dataMapper.queryData(table,
+        		num,info.indicesEqualString(),
+        		info.getKey(),key,conditionsql);
+        
+        if (!data.isEmpty()) 
+        {
+        	logger.debug("condition sql:{} has data", conditionsql);
             Map<String, Object> f = data.get(0);
             response.setColumns(f.keySet());
-
             List<List<Object>> allValues = new ArrayList<List<Object>>();
-            for (Map<String, Object> line : data) {
+            for (Map<String, Object> line : data) 
+            {
                 List<Object> values = new ArrayList<Object>();
-
-                for (String field : line.keySet()) {
+                for (String field : line.keySet()) 
+                {
                     values.add(line.get(field));
                 }
-
                 allValues.add(values);
-            }
-
-            response.setData(allValues);
-        } else {
+          }
+           response.setData(allValues);
+        } 
+        else 
+        {
+        	logger.debug("condition sql:{} has no data", conditionsql);
             response.setColumns(new HashSet<String>());
             response.setData(new ArrayList<List<Object>>());
         }
-
         return response;
     }
-
+    
     private CommitResponse commit(CommitRequest request) throws DataAccessException, IOException {
         Integer count = 0;
-
         Map<Table, List<String>> update =
                 DBReplace(request.getBlockHash(), request.getNum(), request.getData());
-
-        // DB commit success，update cache
-        for (Map.Entry<Table, List<String>> entry : update.entrySet()) {
-            Table table = entry.getKey();
-
-            if (table.getCache() != null) {
-                for (String key : entry.getValue()) {
-                    // request.getNum()+1 can query the latest data
-                    List<Map<String, Object>> newData = dataMapper.queryData(table.getName(),
-                            request.getNum() + 1, table.indicesEqualString(), table.getKey(), key);
-
-                    CacheEntry cacheEntry = new CacheEntry();
-                    cacheEntry.setKey(key);
-                    cacheEntry.setNum(request.getNum() + 1);
-                    cacheEntry.setValues(newData.stream().map(v -> {
-                        CacheValues values = new CacheValues();
-                        values.setFields(v);
-
-                        return values;
-                    }).collect(Collectors.toList()));
-
-                    table.getCache().set(key, cacheEntry);
-                    table.getCache().setLastCommitNum(request.getNum());
-                }
-            }
-        }
-
         count = update.size();
-
         CommitResponse response = new CommitResponse();
         response.setCount(count);
-
         return response;
     }
 
@@ -335,12 +377,12 @@ public class DBService {
             table.setCache(new MemoryCache(3));
             table.setIndices(indices);
         }
-
         return table;
     }
 
-    private void createTable(String table_name) throws Exception {
-
+    public void createTable(String table_name) throws Exception {
+    	
+    	logger.debug("create tablename:{}",table_name);
         List<Map<String, String>> fields = dataMapper.getTable(table_name);
         logger.debug("fields=" + fields.toString());
         String key = fields.get(0).get("key_field");
