@@ -4,7 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.bcos.channel.client.Service;
+import org.fisco.bcos.channel.client.Service;
+
 
 public class Main {
 	private static Logger logger = LoggerFactory.getLogger(Main.class);
@@ -19,7 +20,7 @@ public class Main {
 		try {
 			service.run();
 		} catch (Exception e) {
-		    logger.debug(e.getMessage());
+		    logger.debug("errmsg:",e);
 		}
 	}
 
