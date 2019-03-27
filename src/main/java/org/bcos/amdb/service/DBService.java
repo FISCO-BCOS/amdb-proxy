@@ -195,42 +195,42 @@ public class DBService {
         	 
         	 if(value.getOp()  == org.bcos.amdb.dto.Condition.ConditionOp.eq)
         	 {
-        		 sb.append(" and ").append(strKeyEscape).append(" = ");
+        		 sb.append(" and `").append(strKeyEscape).append("` = ");
         		 sb.append("'").append(StringEscapeUtils.escapeJava(value.getValue()));
         		 sb.append("'");
         	 }
         	 
         	 else if(value.getOp()  == org.bcos.amdb.dto.Condition.ConditionOp.ne)
         	 {
-        		 sb.append(" and ").append(strKeyEscape).append(" != ");
+        		 sb.append(" and `").append(strKeyEscape).append("` != ");
         		 sb.append("'").append(StringEscapeUtils.escapeJava(value.getValue()));
         		 sb.append("'");
         	 }
         	 
         	 else if(value.getOp()  == org.bcos.amdb.dto.Condition.ConditionOp.gt)
         	 {
-        		 sb.append(" and ").append(strKeyEscape).append(">");
+        		 sb.append(" and `").append(strKeyEscape).append("` > ");
         		 sb.append("'").append(StringEscapeUtils.escapeJava(value.getValue()));
         		 sb.append("'");
         	 }
         	 
         	 else if(value.getOp()  == org.bcos.amdb.dto.Condition.ConditionOp.ge)
         	 {
-        		 sb.append(" and ").append(strKeyEscape).append(">=");
+        		 sb.append(" and `").append(strKeyEscape).append("` >= ");
         		 sb.append("'").append(StringEscapeUtils.escapeJava(value.getValue()));
         		 sb.append("'");
         	 }
         	 
         	 else if(value.getOp()  == org.bcos.amdb.dto.Condition.ConditionOp.lt)
         	 {
-        		 sb.append(" and ").append(strKeyEscape).append("<");
+        		 sb.append(" and `").append(strKeyEscape).append("` < ");
         		 sb.append("'").append(StringEscapeUtils.escapeJava(value.getValue()));
         		 sb.append("'");
         	 }
         	 
         	 else if(value.getOp()  == org.bcos.amdb.dto.Condition.ConditionOp.le)
         	 {
-        		 sb.append(" and ").append(strKeyEscape).append("<=");
+        		 sb.append(" and `").append(strKeyEscape).append("` <=");
         		 sb.append("'").append(StringEscapeUtils.escapeJava(value.getValue()));
         		 sb.append("'");
         	 }
