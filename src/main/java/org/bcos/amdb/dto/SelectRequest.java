@@ -1,9 +1,6 @@
 package org.bcos.amdb.dto;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.commons.lang3.tuple.Pair;
+import java.util.List;
 
 public class SelectRequest {
 	
@@ -11,14 +8,13 @@ public class SelectRequest {
 	private Integer num;
 	private String table;
 	private String key;
-	private String	condition;
+	private List<List<String>>	condition;
 	
-	
-	public String getCondition() {
+	public List<List<String>> getCondition() {
 		return condition;
 	}
 
-	public void setCondition(String condition) {
+	public void setCondition(List<List<String>> condition) {
 		this.condition = condition;
 	}
 

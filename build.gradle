@@ -23,14 +23,6 @@ repositories {
 
 import de.undercouch.gradle.tasks.download.Download
 
-task downsdk(type: Download) {
-		src 'http://central.maven.org/maven2/org/fisco-bcos/web3sdk/2.0.2/web3sdk-2.0.2.jar'
-		dest 'lib/web3sdk-2.0.2.jar'
-		overwrite false
-}
-//check.dependsOn downsdk
-//build.shouldRunAfter downsdk
-
 List logger = [
 	"org.slf4j:jul-to-slf4j:1.7.10",
 	"org.apache.logging.log4j:log4j-api:2.1",
@@ -66,16 +58,11 @@ dependencies {
    	compile 'org.apache.commons:commons-collections4:4.1'
    	runtime 'org.apache.commons:commons-collections4:4.1'
    	
-   	
-   	
    	compile 'org.ethereum:solcJ-all:0.4.25'
    	runtime 'org.ethereum:solcJ-all:0.4.25'
    	
    	compile 'org.fisco-bcos:web3sdk:2.0.0-rc1'
    	runtime 'org.fisco-bcos:web3sdk:2.0.0-rc1'
-   	
-   	
-   	
 }
 
 sourceSets {
