@@ -8,25 +8,18 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.text.StringEscapeUtils;
 import org.bcos.amdb.cache.Cache;
-import org.bcos.amdb.cache.CacheEntry;
-import org.bcos.amdb.cache.CacheValues;
 import org.bcos.amdb.cache.MemoryCache;
 import org.bcos.amdb.dao.DataMapper;
 import org.bcos.amdb.dto.BatchCommitRequest;
@@ -154,17 +147,29 @@ public class DBService {
         return response;
     }
     
-    public SelectResponse select(SelectRequest request) throws DataAccessException {
+    public SelectResponse select(SelectRequest request) throws Exception {
     	String table = request.getTable();
         Integer num = request.getNum();
         Table info = getTable(table);
         String key = request.getKey();
-        String condition = request.getCondition();
+        List<List<String>> condition = request.getCondition();
         logger.debug("key:{} condition:{}",key,condition);
-        JSONArray obj = JSONArray.parseArray(condition);
-        logger.debug("key:{} condition obj:{}",key,obj);
+        //JSONArray obj = JSONArray.parseArray(condition);
+        //logger.debug("key:{} condition obj:{}",key,obj);
         Map<String,Condition >	conditionmap = new HashMap<String, Condition >();
+        for(List<String> cond: condition) {
+          if(cond.size() < 3) {
+            throw new Exception("Invalid cond:" + cond.stream().reduce((a,b) -> a +", " +b));
+          }
+          
+          Condition condItem = new Condition();
+          condItem.setOp(Condition.valueOf(Integer.parseInt(cond.get(1))));
+          condItem.setValue(cond.get(2));
+          
+          conditionmap.put(cond.get(0), condItem);
+        }
         
+        /*
         for(int index=0;index<obj.size();index++)
         {
         	JSONObject ss = obj.getJSONObject(index);
@@ -176,6 +181,7 @@ public class DBService {
         	conditionItem.setValue(keyValue);
         	conditionmap.put(keyFileld,conditionItem);
         }
+        */
         StringBuilder sb = new StringBuilder();
         Iterator<java.util.Map.Entry<String, Condition>> entries 
         	= conditionmap.entrySet().iterator();
@@ -189,42 +195,42 @@ public class DBService {
         	 
         	 if(value.getOp()  == org.bcos.amdb.dto.Condition.ConditionOp.eq)
         	 {
-        		 sb.append(" and ").append(strKeyEscape).append(" = ");
+        		 sb.append(" and `").append(strKeyEscape).append("` = ");
         		 sb.append("'").append(StringEscapeUtils.escapeJava(value.getValue()));
         		 sb.append("'");
         	 }
         	 
         	 else if(value.getOp()  == org.bcos.amdb.dto.Condition.ConditionOp.ne)
         	 {
-        		 sb.append(" and ").append(strKeyEscape).append(" != ");
+        		 sb.append(" and `").append(strKeyEscape).append("` != ");
         		 sb.append("'").append(StringEscapeUtils.escapeJava(value.getValue()));
         		 sb.append("'");
         	 }
         	 
         	 else if(value.getOp()  == org.bcos.amdb.dto.Condition.ConditionOp.gt)
         	 {
-        		 sb.append(" and ").append(strKeyEscape).append(">");
+        		 sb.append(" and `").append(strKeyEscape).append("` > ");
         		 sb.append("'").append(StringEscapeUtils.escapeJava(value.getValue()));
         		 sb.append("'");
         	 }
         	 
         	 else if(value.getOp()  == org.bcos.amdb.dto.Condition.ConditionOp.ge)
         	 {
-        		 sb.append(" and ").append(strKeyEscape).append(">=");
+        		 sb.append(" and `").append(strKeyEscape).append("` >= ");
         		 sb.append("'").append(StringEscapeUtils.escapeJava(value.getValue()));
         		 sb.append("'");
         	 }
         	 
         	 else if(value.getOp()  == org.bcos.amdb.dto.Condition.ConditionOp.lt)
         	 {
-        		 sb.append(" and ").append(strKeyEscape).append("<");
+        		 sb.append(" and `").append(strKeyEscape).append("` < ");
         		 sb.append("'").append(StringEscapeUtils.escapeJava(value.getValue()));
         		 sb.append("'");
         	 }
         	 
         	 else if(value.getOp()  == org.bcos.amdb.dto.Condition.ConditionOp.le)
         	 {
-        		 sb.append(" and ").append(strKeyEscape).append("<=");
+        		 sb.append(" and `").append(strKeyEscape).append("` <=");
         		 sb.append("'").append(StringEscapeUtils.escapeJava(value.getValue()));
         		 sb.append("'");
         	 }
@@ -308,20 +314,26 @@ public class DBService {
                 cache.setLastCommitNum(0); // update LastCommit to 0， temporarily disable cache
             }
 
-            for (Entry entry : tableData.getEntries()) {
+            for (Map<String, String> entry : tableData.getEntries()) {
+              /*
                 String key = entry.getKey();
 
                 if (cache != null) {
                     cache.remove(key);
                 }
+                */
 
-                for (Map<String, String> fields : entry.getValues()) {
+                //for (Map<String, String> fields : entry.getValues()) {
                     StringBuffer sbFields = new StringBuffer();
                     StringBuffer sbValues = new StringBuffer();
 
-                    for (Map.Entry<String, String> line : fields.entrySet()) {
+                    for (Map.Entry<String, String> line : entry.entrySet()) {
                         if (line.getKey().equals("_num_") || line.getKey().equals("_hash_")) {
                             continue;
+                        }
+                        
+                        if(line.getKey().equals("_id_") && line.getValue().equals("0")) {
+                          continue;
                         }
 
                         sbFields.append("`");
@@ -348,12 +360,12 @@ public class DBService {
                         _fields = sbFields.toString();
                     }
 
-                }
+                //}
 
-                keys.add(entry.getKey());
+                //keys.add(entry.getKey());
             }
 
-            updateKeys.put(table, keys);
+            //updateKeys.put(table, keys);
             if (_table != null && _fields != null && list.size() > 0) {
 
                 dataMapper.commitData(_table, _fields, list);
