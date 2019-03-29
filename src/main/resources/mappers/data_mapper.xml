@@ -14,7 +14,7 @@
 	
 	<select id="queryData" resultType="map">
 		<!--  select * from ${table} where _num_ &lt; #{num} and ${key_field} = #{key_value} ${query_condition} -->
-		select * from ${table} where _num_ &lt;= #{num} ${query_condition}
+		select * from ${table} where 1=1 ${query_condition}
 	</select>
 	
 	<select id="queryAllData" resultType="map">
