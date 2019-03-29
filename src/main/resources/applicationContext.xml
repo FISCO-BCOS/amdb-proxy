@@ -72,6 +72,7 @@
 				<value>${node.topic}</value>
 			</list>
 		</property>
+		<property name="pushCallback" ref="DBHandler"/>
 	</bean>
 	
 	<bean id="DBService" class="org.bcos.amdb.service.DBService" init-method="initTables">

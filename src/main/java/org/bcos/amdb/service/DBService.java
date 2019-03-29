@@ -332,17 +332,18 @@ public class DBService {
                             continue;
                         }
                         
-                        if(line.getKey().equals("_id_") && line.getValue().equals("0")) {
-                          continue;
-                        }
-
                         sbFields.append("`");
                         sbFields.append(replaceString(line.getKey()));
                         sbFields.append("`,");
-
-                        sbValues.append("'");
-                        sbValues.append(replaceString(line.getValue()));
-                        sbValues.append("',");
+                        
+                        if(line.getKey().equals("_id_") && line.getValue().equals("0")) {
+                          sbValues.append("NULL");
+                        }
+                        else {
+                          sbValues.append("'");
+                          sbValues.append(replaceString(line.getValue()));
+                          sbValues.append("',");
+                        }
                     }
 
                     // batch data to be inserted into the list
