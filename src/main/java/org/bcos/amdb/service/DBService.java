@@ -102,12 +102,15 @@ public class DBService {
                 try {
                     result = commit(request.getParams());
                 } catch (DataAccessException e) {// process fail，create table，send request again
+                  /*
                     List<TableData> data = request.getParams().getData();
                     for (TableData tableData : data) {
                         String table_name = tableData.getTable();
                         createTable(table_name);
                         result = commit(request.getParams());
                     }
+                    */
+                  logger.error("commitDB error:", e);
                 } 
             } else {
                 logger.error("Unknown request:{}", header.getOp());
@@ -151,22 +154,30 @@ public class DBService {
     	String table = request.getTable();
         Integer num = request.getNum();
         Table info = getTable(table);
+        
+        if(info == null) {
+          SelectResponse response = new SelectResponse();
+          return response;
+        }
+        
         String key = request.getKey();
         List<List<String>> condition = request.getCondition();
         logger.debug("key:{} condition:{}",key,condition);
         //JSONArray obj = JSONArray.parseArray(condition);
         //logger.debug("key:{} condition obj:{}",key,obj);
         Map<String,Condition >	conditionmap = new HashMap<String, Condition >();
-        for(List<String> cond: condition) {
-          if(cond.size() < 3) {
-            throw new Exception("Invalid cond:" + cond.stream().reduce((a,b) -> a +", " +b));
+        if(condition != null) {
+          for(List<String> cond: condition) {
+            if(cond.size() < 3) {
+              throw new Exception("Invalid cond:" + cond.stream().reduce((a,b) -> a +", " +b));
+            }
+            
+            Condition condItem = new Condition();
+            condItem.setOp(Condition.valueOf(Integer.parseInt(cond.get(1))));
+            condItem.setValue(cond.get(2));
+            
+            conditionmap.put(cond.get(0), condItem);
           }
-          
-          Condition condItem = new Condition();
-          condItem.setOp(Condition.valueOf(Integer.parseInt(cond.get(1))));
-          condItem.setValue(cond.get(2));
-          
-          conditionmap.put(cond.get(0), condItem);
         }
         
         /*
@@ -280,39 +291,52 @@ public class DBService {
         return response;
     }
     
-    private CommitResponse commit(CommitRequest request) throws DataAccessException, IOException {
+    private CommitResponse commit(CommitRequest request) throws Exception {
         Integer count = 0;
+        
+        processNewTable(request.getBlockHash(), request.getNum(), request.getData());
+        
         Map<Table, List<String>> update =
                 DBReplace(request.getBlockHash(), request.getNum(), request.getData());
+        
         count = update.size();
         CommitResponse response = new CommitResponse();
         response.setCount(count);
         return response;
     }
+    
+  private void processNewTable(String hash, Integer num, List<TableData> data) throws Exception {
+    for (TableData tableData : data) {
+      if (tableData.getTable().equals("_sys_tables_")) {
+        // create table if _sys_tables got new table
+        for (Map<String, String> line : tableData.getEntries()) {
+          String id = line.get("_id_");
+
+          if (id.equals("0")) {
+            // new table
+
+            String tableName = line.get("table_name");
+            String keyField = line.get("key_field");
+            String valueField = line.get("value_field");
+
+            createTable(tableName, keyField, valueField);
+          }
+        }
+
+        break;
+      }
+    }
+  }
 
     @Transactional
     private Map<Table, List<String>> DBReplace(String hash, Integer num, List<TableData> data)
-            throws DataAccessException {
+            throws Exception {
         Map<Table, List<String>> updateKeys = new HashMap<Table, List<String>>();
 
         for (TableData tableData : data) {
-            Table table = getTable(tableData.getTable());
-
-            if (table == null) {
-                logger.error("Cannot find the table:{}", tableData.getTable());
-                continue;
-            }
-
             List<BatchCommitRequest> list = new ArrayList<>();
             String _table = null;
             String _fields = null;
-
-            List<String> keys = new ArrayList<String>();
-
-            Cache cache = table.getCache();
-            if (cache != null) {
-                cache.setLastCommitNum(0); // update LastCommit to 0， temporarily disable cache
-            }
 
             for (Map<String, String> entry : tableData.getEntries()) {
               /*
@@ -332,17 +356,18 @@ public class DBService {
                             continue;
                         }
                         
-                        if(line.getKey().equals("_id_") && line.getValue().equals("0")) {
-                          continue;
-                        }
-
                         sbFields.append("`");
                         sbFields.append(replaceString(line.getKey()));
                         sbFields.append("`,");
-
-                        sbValues.append("'");
-                        sbValues.append(replaceString(line.getValue()));
-                        sbValues.append("',");
+                        
+                        if(line.getKey().equals("_id_") && line.getValue().equals("0")) {
+                          sbValues.append("NULL,");
+                        }
+                        else {
+                          sbValues.append("'");
+                          sbValues.append(replaceString(line.getValue()));
+                          sbValues.append("',");
+                        }
                     }
 
                     // batch data to be inserted into the list
@@ -353,7 +378,7 @@ public class DBService {
                     list.add(batchCommitRequest);
 
                     if (_table == null) {
-                        _table = table.getName();
+                        _table = tableData.getTable();
                     }
 
                     if (_fields == null) {
@@ -391,6 +416,16 @@ public class DBService {
         }
         return table;
     }
+    
+    public void createTable(String tableName, String keyField, String valueField) throws Exception {
+      logger.debug("create tablename:{}",tableName);
+        String key = keyField;
+        String value_field = valueField;
+        String[] values = value_field.split(",");
+        String sql = getSql(getStrSql(tableName), getStrSql(key), values);
+        dataMapper.createTable(sql);
+
+    }
 
     public void createTable(String table_name) throws Exception {
     	
@@ -414,7 +449,7 @@ public class DBService {
                 .append(" varchar(128) default '',\n");
         if (!"".equals(values[0].trim())) {
             for (String value : values) {
-                sql.append(" `").append(getStrSql(value)).append("` varchar(2048) default '',\n");
+                sql.append(" `").append(getStrSql(value)).append("` text,\n");
             }
         }
         sql.append(" PRIMARY KEY( `_id_` ),\n").append(" KEY(`").append(key).append("`),\n")

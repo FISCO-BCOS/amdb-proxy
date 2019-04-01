@@ -13,54 +13,8 @@
 	</update>
 	
 	<select id="queryData" resultType="map">
-		select * from ${table} where _num_ &lt; #{num} and ${key_field} = #{key_value} ${query_condition}
-	</select>
-	
-	<select id="queryAllData" resultType="map">
-		select * from ${table} where _num_ &lt; #{num}
-	</select>
-	 
-	<insert id="commitData" parameterType="java.util.List">
-	        replace into ${table}(${fields}`_hash_`,`_num_`)
-	        values
-	        <foreach collection="list" item="item" index="index" separator=",">
-	            (${item.values}#{item.hash},#{item.num})
-	        </foreach>
-    </insert>
-    
-    <update id="createSysTables" >
-		CREATE TABLE IF NOT EXISTS `_sys_tables_` (
-		  `_id_`  int unsigned auto_increment,
-		  `_hash_` varchar(128) default '',
-		  `_num_` int(11) default 0,
-		   `_status_` int(11) default 0,
-		  `table_name` varchar(128) default '',
-		  `key_field` varchar(1024) default '',
-		  `value_field` varchar(1024) default '',
-		   PRIMARY KEY (`_id_`),
-		   UNIQUE KEY (table_name)
-		) ENGINE=InnoDB default charset=utf8mb4;
-	</update>
-    
-    <update id="createSysMiners" >
-		CREATE TABLE IF NOT EXISTS `_sys_miners_` (
-		  `_id_`  int unsigned auto_increment,<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-
-<mapper namespace="org.bcos.amdb.dao.DataMapper">
-
-	<select id="getTable" resultType="map">
-		select key_field, value_field from _sys_tables_ where table_name = #{table_name}
-	</select>
-	
-	<update id="createTable" parameterType="java.lang.String">
-		${sql}
-	</update>
-	
-	<select id="queryData" resultType="map">
 		<!--  select * from ${table} where _num_ &lt; #{num} and ${key_field} = #{key_value} ${query_condition} -->
-		select * from ${table} where _num_ &lt;= #{num} ${query_condition}
+		select * from ${table} where 1=1 ${query_condition}
 	</select>
 	
 	<select id="queryAllData" resultType="map">
@@ -185,7 +139,7 @@
 		  `_num_` int(11),
 		  `_status_` int(11),
 		  `hash` varchar(128),
-		  `value` varchar(128),
+		  `value` text,
 		  PRIMARY KEY (`_id_`),
 		  KEY (hash)
 		) engine=innodb default charset=utf8mb4; 
@@ -248,153 +202,5 @@
 		('_sys_config_', 'key','value,enable_num'),
 		('_sys_block_2_nonces_', 'number','value');
 	</insert>
-	
-</mapper>
-		  `_hash_` varchar(128),
-		  `_num_` int(11),
-		  `_status_` int(11),
-		  `name` varchar(128) default 'node',
-		  `type` varchar(128),
-		  `node_id` varchar(256),
-		  `enable_num` varchar(256),
-		  PRIMARY KEY (`_id_`),
-		  KEY (_num_),
-		  KEY (name)
-		) engine=innodb default charset=utf8mb4; 
-	</update>
-	
-	<insert id="insertSysTables">
-		insert ignore into  `_sys_tables_` ( `table_name` , `key_field`, `value_field`) values 
-		('_sys_tables_', 'table_name','key_field,value_field'),
-		('_sys_miners_', 'name','type,node_id,enable_num');
-	</insert>
-	
-	
-	<update id="createSysConsensus" >
-		CREATE TABLE IF NOT EXISTS `_sys_consensus_` (
-		  `_id_`  int unsigned auto_increment,
-		  `_hash_` varchar(128),
-		  `_num_` int(11),
-		  `_status_` int(11),
-		  `name` varchar(128) default 'node',
-		  `type` varchar(128),
-		  `node_id` varchar(256),
-		  `enable_num` varchar(256),
-		  PRIMARY KEY (`_id_`),
-		  KEY (_num_),
-		  KEY (name)
-		) engine=innodb default charset=utf8mb4; 
-	</update>
-	
-	
-	<update id="createAccessTables" >
-		CREATE TABLE IF NOT EXISTS `_sys_table_access_` (
-		  `_id_`  int unsigned auto_increment,
-		  `_hash_` varchar(128),
-		  `_num_` int(11),
-		  `_status_` int(11),
-		  `table_name` varchar(128),
-		  `address` varchar(128),
-		  `enable_num` varchar(256),
-		  PRIMARY KEY (`_id_`),
-		  KEY (table_name)
-		) engine=innodb default charset=utf8mb4; 
-	</update>
-	
-	<update id="createCurrentStateTables" >
-		CREATE TABLE IF NOT EXISTS `_sys_current_state_` (
-		  `_id_`  int unsigned auto_increment,
-		  `_hash_` varchar(128),
-		  `_num_` int(11),
-		  `_status_` int(11),
-		  `key` varchar(128),
-		  `value` varchar(128),
-		  PRIMARY KEY (`_id_`),
-		  KEY (`key`)
-		) engine=innodb default charset=utf8mb4; 
-	</update>
-	
-	
-	<update id="createNumber2HashTables" >
-		CREATE TABLE IF NOT EXISTS `_sys_number_2_hash_` (
-		  `_id_`  int unsigned auto_increment,
-		  `_hash_` varchar(128),
-		  `_num_` int(11),
-		  `_status_` int(11),
-		  `number` varchar(128),
-		  `value` varchar(128),
-		  PRIMARY KEY (`_id_`),
-		  KEY (number)
-		) engine=innodb default charset=utf8mb4; 
-	</update>
-	
-	<update id="createTxHash2BlockTables" >
-		CREATE TABLE IF NOT EXISTS `_sys_tx_hash_2_block_` (
-		  `_id_`  int unsigned auto_increment,
-		  `_hash_` varchar(128),
-		  `_num_` int(11),
-		  `_status_` int(11),
-		  `hash` varchar(128),
-		  `value` varchar(128),
-		  `index` varchar(256),
-		  PRIMARY KEY (`_id_`),
-		  KEY (hash)
-		) engine=innodb default charset=utf8mb4; 
-	</update>
-	
-	<update id="createHash2BlockTables" >
-		CREATE TABLE IF NOT EXISTS `_sys_hash_2_block_` (
-		  `_id_`  int unsigned auto_increment,
-		  `_hash_` varchar(128),
-		  `_num_` int(11),
-		  `_status_` int(11),
-		  `hash` varchar(128),
-		  `value` varchar(128),
-		  PRIMARY KEY (`_id_`),
-		  KEY (hash)
-		) engine=innodb default charset=utf8mb4; 
-	</update>
-	
-	<update id="createCnsTables" >
-		CREATE TABLE IF NOT EXISTS `_sys_cns_` (
-		  `_id_`  int unsigned auto_increment,
-		  `_hash_` varchar(128),
-		  `_num_` int(11),
-		  `_status_` int(11),
-		  `name` varchar(128),
-		  `version` varchar(128),
-		  `address` varchar(256),
-		  `abi` varchar(256),
-		  PRIMARY KEY (`_id_`),
-		  KEY (name)
-		) engine=innodb default charset=utf8mb4; 
-	</update>
-	
-	<update id="createSysConfigTables" >
-		CREATE TABLE IF NOT EXISTS `_sys_config_` (
-		  `_id_`  int unsigned auto_increment,
-		  `_hash_` varchar(128),
-		  `_num_` int(11),
-		  `_status_` int(11),
-		  `key` varchar(128),
-		  `value` varchar(128),
-		  `enable_num` varchar(256),
-		  PRIMARY KEY (`_id_`),
-		  KEY (`key`)
-		) engine=innodb default charset=utf8mb4; 
-	</update>
-	
-	<update id="createSysBlock2NoncesTables" >
-		CREATE TABLE IF NOT EXISTS `_sys_block_2_nonces_` (
-		  `_id_`  int unsigned auto_increment,
-		  `_hash_` varchar(128),
-		  `_num_` int(11),
-		  `_status_` int(11),
-		  `number` varchar(128),
-		  `value` varchar(128),
-		  PRIMARY KEY (`_id_`),
-		  KEY (number)
-		) engine=innodb default charset=utf8mb4; 
-	</update>
 	
 </mapper>
