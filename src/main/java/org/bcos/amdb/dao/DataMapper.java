@@ -29,8 +29,6 @@ public interface DataMapper {
 	
 	public void insertSysTables();
 	
-	public void createSysMiners();
-	
 	public void createSysConsensus();
 	
 	public void createAccessTables();
