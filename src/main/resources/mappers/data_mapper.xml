@@ -42,7 +42,6 @@
 		   UNIQUE KEY (table_name)
 		) ENGINE=InnoDB default charset=utf8mb4;
 	</update>
-	
 	<update id="createSysConsensus" >
 		CREATE TABLE IF NOT EXISTS `_sys_consensus_` (
 		  `_id_`  int unsigned auto_increment,
