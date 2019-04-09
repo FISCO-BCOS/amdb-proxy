@@ -98,7 +98,7 @@
 		  `_num_` int(11),
 		  `_status_` int(11),
 		  `key` varchar(128),
-		  `value` varchar(128),
+		  `value` MEDIUMTEXT,
 		  PRIMARY KEY (`_id_`),
 		  KEY (`key`)
 		) engine=innodb default charset=utf8mb4; 
@@ -112,7 +112,7 @@
 		  `_num_` int(11),
 		  `_status_` int(11),
 		  `number` varchar(128),
-		  `value` varchar(128),
+		  `value` MEDIUMTEXT,
 		  PRIMARY KEY (`_id_`),
 		  KEY (number)
 		) engine=innodb default charset=utf8mb4; 
@@ -125,7 +125,7 @@
 		  `_num_` int(11),
 		  `_status_` int(11),
 		  `hash` varchar(128),
-		  `value` varchar(128),
+		  `value` MEDIUMTEXT,
 		  `index` varchar(256),
 		  PRIMARY KEY (`_id_`),
 		  KEY (hash)
@@ -139,7 +139,7 @@
 		  `_num_` int(11),
 		  `_status_` int(11),
 		  `hash` varchar(128),
-		  `value` text,
+		  `value` MEDIUMTEXT,
 		  PRIMARY KEY (`_id_`),
 		  KEY (hash)
 		) engine=innodb default charset=utf8mb4; 
@@ -154,7 +154,7 @@
 		  `name` varchar(128),
 		  `version` varchar(128),
 		  `address` varchar(256),
-		  `abi` varchar(256),
+		  `abi` MEDIUMTEXT,
 		  PRIMARY KEY (`_id_`),
 		  KEY (name)
 		) engine=innodb default charset=utf8mb4; 
@@ -167,7 +167,7 @@
 		  `_num_` int(11),
 		  `_status_` int(11),
 		  `key` varchar(128),
-		  `value` varchar(128),
+		  `value` MEDIUMTEXT,
 		  `enable_num` varchar(256),
 		  PRIMARY KEY (`_id_`),
 		  KEY (`key`)
@@ -181,7 +181,7 @@
 		  `_num_` int(11),
 		  `_status_` int(11),
 		  `number` varchar(128),
-		  `value` varchar(128),
+		  `value` MEDIUMTEXT,
 		  PRIMARY KEY (`_id_`),
 		  KEY (number)
 		) engine=innodb default charset=utf8mb4; 
