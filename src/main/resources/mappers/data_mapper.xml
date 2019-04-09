@@ -42,24 +42,6 @@
 		   UNIQUE KEY (table_name)
 		) ENGINE=InnoDB default charset=utf8mb4;
 	</update>
-    
-    <update id="createSysMiners" >
-		CREATE TABLE IF NOT EXISTS `_sys_miners_` (
-		  `_id_`  int unsigned auto_increment,
-		  `_hash_` varchar(128),
-		  `_num_` int(11),
-		  `_status_` int(11),
-		  `name` varchar(128) default 'node',
-		  `type` varchar(128),
-		  `node_id` varchar(256),
-		  `enable_num` varchar(256),
-		  PRIMARY KEY (`_id_`),
-		  KEY (_num_),
-		  KEY (name)
-		) engine=innodb default charset=utf8mb4; 
-	</update>
-	
-	
 	<update id="createSysConsensus" >
 		CREATE TABLE IF NOT EXISTS `_sys_consensus_` (
 		  `_id_`  int unsigned auto_increment,
@@ -98,7 +80,7 @@
 		  `_num_` int(11),
 		  `_status_` int(11),
 		  `key` varchar(128),
-		  `value` varchar(128),
+		  `value` MEDIUMTEXT,
 		  PRIMARY KEY (`_id_`),
 		  KEY (`key`)
 		) engine=innodb default charset=utf8mb4; 
@@ -112,7 +94,7 @@
 		  `_num_` int(11),
 		  `_status_` int(11),
 		  `number` varchar(128),
-		  `value` varchar(128),
+		  `value` MEDIUMTEXT,
 		  PRIMARY KEY (`_id_`),
 		  KEY (number)
 		) engine=innodb default charset=utf8mb4; 
@@ -125,7 +107,7 @@
 		  `_num_` int(11),
 		  `_status_` int(11),
 		  `hash` varchar(128),
-		  `value` varchar(128),
+		  `value` MEDIUMTEXT,
 		  `index` varchar(256),
 		  PRIMARY KEY (`_id_`),
 		  KEY (hash)
@@ -139,7 +121,7 @@
 		  `_num_` int(11),
 		  `_status_` int(11),
 		  `hash` varchar(128),
-		  `value` text,
+		  `value` MEDIUMTEXT,
 		  PRIMARY KEY (`_id_`),
 		  KEY (hash)
 		) engine=innodb default charset=utf8mb4; 
@@ -154,7 +136,7 @@
 		  `name` varchar(128),
 		  `version` varchar(128),
 		  `address` varchar(256),
-		  `abi` varchar(256),
+		  `abi` MEDIUMTEXT,
 		  PRIMARY KEY (`_id_`),
 		  KEY (name)
 		) engine=innodb default charset=utf8mb4; 
@@ -167,7 +149,7 @@
 		  `_num_` int(11),
 		  `_status_` int(11),
 		  `key` varchar(128),
-		  `value` varchar(128),
+		  `value` MEDIUMTEXT,
 		  `enable_num` varchar(256),
 		  PRIMARY KEY (`_id_`),
 		  KEY (`key`)
@@ -181,7 +163,7 @@
 		  `_num_` int(11),
 		  `_status_` int(11),
 		  `number` varchar(128),
-		  `value` varchar(128),
+		  `value` MEDIUMTEXT,
 		  PRIMARY KEY (`_id_`),
 		  KEY (number)
 		) engine=innodb default charset=utf8mb4; 
@@ -191,7 +173,6 @@
 	<insert id="insertSysTables">
 		insert ignore into  `_sys_tables_` ( `table_name` , `key_field`, `value_field`) values 
 		('_sys_tables_', 'table_name','key_field,value_field'),
-		('_sys_miners_', 'name','type,node_id,enable_num'),
 		('_sys_consensus_', 'name','type,node_id,enable_num'),
 		('_sys_table_access_', 'table_name','address,enable_num'),
 		('_sys_current_state_', 'key','value'),

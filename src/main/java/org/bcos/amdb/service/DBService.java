@@ -47,7 +47,6 @@ public class DBService {
         try {
             dataMapper.createSysTables();
             dataMapper.insertSysTables();
-            dataMapper.createSysMiners();
             //add by darrenyin
             dataMapper.createSysConsensus();
             dataMapper.createAccessTables();
