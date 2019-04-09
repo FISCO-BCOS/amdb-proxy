@@ -206,12 +206,6 @@ public class DBServiceTest {
       // TODO Auto-generated method stub
       
     }
-
-    @Override
-    public void createSysMiners() {
-      // TODO Auto-generated method stub
-      
-    }
     
     
     public void createSysConsensus()
