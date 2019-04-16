@@ -311,7 +311,8 @@ public class DBService {
         for (Map<String, String> line : tableData.getEntries()) {
           String id = line.get("_id_");
 
-          if (id.equals("0")) {
+          //if (id.equals("0")) {
+          if(true) {
             // new table
 
             String tableName = line.get("table_name");
@@ -403,7 +404,7 @@ public class DBService {
         List<Map<String, String>> fields = dataMapper.getTable(table_name);
         Table table = null;
         if (fields.isEmpty()) {
-            logger.error("Cannot find the table");
+            logger.error("Cannot find the table: {}", table_name);
         } else {
             table = new Table();
             table.setName(table_name);
