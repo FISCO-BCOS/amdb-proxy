@@ -121,7 +121,7 @@
 		  `_num_` int(11),
 		  `_status_` int(11),
 		  `hash` varchar(128),
-		  `value` MEDIUMTEXT,
+		  `value` LONGTEXT,
 		  PRIMARY KEY (`_id_`),
 		  KEY (hash)
 		) engine=innodb default charset=utf8mb4; 
