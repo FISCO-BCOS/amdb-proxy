@@ -77,6 +77,10 @@
 	
 	<bean id="DBService" class="org.bcos.amdb.service.DBService" init-method="initTables">
 	</bean>
+	
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<constructor-arg ref="dataSource" />
+	</bean>
 
 	<!-- database connection configuration -->
 	 <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource">
