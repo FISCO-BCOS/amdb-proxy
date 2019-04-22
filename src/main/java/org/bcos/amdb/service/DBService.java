@@ -274,16 +274,12 @@ public class DBService {
 	    if (tableData.getTable().equals("_sys_tables_")) {
 		// create table if _sys_tables got new table
 		for (Map<String, String> line : tableData.getEntries()) {
-		    String id = line.get("_id_");
+		    // new table
+		    String tableName = line.get("table_name");
+		    String keyField = line.get("key_field");
+		    String valueField = line.get("value_field");
 
-		    if (true) {
-			// new table
-			String tableName = line.get("table_name");
-			String keyField = line.get("key_field");
-			String valueField = line.get("value_field");
-
-			createTable(tableName, keyField, valueField);
-		    }
+		    createTable(tableName, keyField, valueField);
 		}
 
 		break;
@@ -314,13 +310,9 @@ public class DBService {
 			sbFields.append(replaceString(line.getKey()));
 			sbFields.append("`,");
 
-			if (line.getKey().equals("_id_") && line.getValue().equals("0")) {
-			    sbValues.append("NULL,");
-			} else {
-			    sbValues.append("'");
-			    sbValues.append(replaceString(line.getValue()));
-			    sbValues.append("',");
-			}
+			sbValues.append("'");
+			sbValues.append(replaceString(line.getValue()));
+			sbValues.append("',");
 		    }
 
 		    // batch data to be inserted into the list
@@ -329,7 +321,7 @@ public class DBService {
 		    batchCommitRequest.setNum(num);
 		    batchCommitRequest.setValues(sbValues.toString());
 		    list.add(batchCommitRequest);
-		    
+
 		    if (_table == null) {
 			_table = tableData.getTable();
 		    }
