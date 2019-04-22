@@ -36,456 +36,399 @@ import org.bcos.amdb.dto.TableData;
 import org.bcos.amdb.dto.Request;
 import org.bcos.amdb.dto.Response;
 
-
 public class DBService {
-	
+
     private static Logger logger = LoggerFactory.getLogger(DBService.class);
     private static final String SYSTABLE = "_sys_tables_";
 
     public void initTables() {
-        logger.info("Start create table:");
-        try {
-            dataMapper.createSysTables();
-            dataMapper.insertSysTables();
-            //add by darrenyin
-            dataMapper.createSysConsensus();
-            dataMapper.createAccessTables();
-            dataMapper.createCurrentStateTables();
-            dataMapper.createNumber2HashTables();
-            dataMapper.createTxHash2BlockTables();
-            dataMapper.createHash2BlockTables();
-            dataMapper.createCnsTables();
-            dataMapper.createSysConfigTables();
-            dataMapper.createSysBlock2NoncesTables();
-            
-        } catch (Exception e) {
-            logger.debug("Create table error: " + e.getMessage());
-        }
-        logger.info("Create table successful!");
+	logger.info("Start create table:");
+	try {
+	    dataMapper.createSysTables();
+	    dataMapper.insertSysTables();
+	    // add by darrenyin
+	    dataMapper.createSysConsensus();
+	    dataMapper.createAccessTables();
+	    dataMapper.createCurrentStateTables();
+	    dataMapper.createNumber2HashTables();
+	    dataMapper.createTxHash2BlockTables();
+	    dataMapper.createHash2BlockTables();
+	    dataMapper.createCnsTables();
+	    dataMapper.createSysConfigTables();
+	    dataMapper.createSysBlock2NoncesTables();
+
+	} catch (Exception e) {
+	    logger.debug("Create table error: " + e.getMessage());
+	}
+	logger.info("Create table successful!");
     }
 
     public String process(String content) throws JsonProcessingException {
-    	
-        Response response = new Response();
-        Object result = null;
 
-        try {
-            logger.trace("Process receives the request: {}", content);
-            Header header = objectMapper.readValue(content, Header.class);
+	Response response = new Response();
+	Object result = null;
 
-            if (header.getOp() == null) {
-                throw new Exception("Failed to parse header.op:" + content);
-            }
+	try {
+	    logger.trace("Process receives the request: {}", content);
+	    Header header = objectMapper.readValue(content, Header.class);
 
-            if (header.getOp().equals("info")) {
-                Request<InfoRequest> request = objectMapper.readValue(content,
-                        new TypeReference<Request<InfoRequest>>() {});
-                result = info(request.getParams());
+	    if (header.getOp() == null) {
+		throw new Exception("Failed to parse header.op:" + content);
+	    }
 
-            } else if (header.getOp().equals("select")) {
-                Request<SelectRequest> request = objectMapper.readValue(content,
-                        new TypeReference<Request<SelectRequest>>() {});
+	    if (header.getOp().equals("info")) {
+		Request<InfoRequest> request = objectMapper.readValue(content,
+			new TypeReference<Request<InfoRequest>>() {
+			});
+		result = info(request.getParams());
 
-                SelectRequest params = request.getParams();
-                try {
-                    result = select(params);
-                } catch (DataAccessException e) {
-                    createTable(params.getTable());
-                    result = select(params);
-                }
+	    } else if (header.getOp().equals("select")) {
+		Request<SelectRequest> request = objectMapper.readValue(content,
+			new TypeReference<Request<SelectRequest>>() {
+			});
 
-            } else if (header.getOp().equals("commit")) {
-                Request<CommitRequest> request = objectMapper.readValue(content,
-                        new TypeReference<Request<CommitRequest>>() {});
+		SelectRequest params = request.getParams();
+		try {
+		    result = select(params);
+		} catch (DataAccessException e) {
+		    createTable(params.getTable());
+		    result = select(params);
+		}
 
-                try {
-                    result = commit(request.getParams());
-                } catch (DataAccessException e) {// process fail，create table，send request again
-                  /*
-                    List<TableData> data = request.getParams().getData();
-                    for (TableData tableData : data) {
-                        String table_name = tableData.getTable();
-                        createTable(table_name);
-                        result = commit(request.getParams());
-                    }
-                    */
-                  logger.error("commitDB error:", e);
-                } 
-            } else {
-                logger.error("Unknown request:{}", header.getOp());
+	    } else if (header.getOp().equals("commit")) {
+		Request<CommitRequest> request = objectMapper.readValue(content,
+			new TypeReference<Request<CommitRequest>>() {
+			});
 
-                throw new Exception("Unknown request:" + header.getOp());
-            }
+		try {
+		    result = commit(request.getParams());
+		} catch (DataAccessException e) {// process fail，create table，send request again
+		    /*
+		     * List<TableData> data = request.getParams().getData(); for (TableData
+		     * tableData : data) { String table_name = tableData.getTable();
+		     * createTable(table_name); result = commit(request.getParams()); }
+		     */
+		    logger.error("commitDB error:", e);
+		}
+	    } else {
+		logger.error("Unknown request:{}", header.getOp());
 
-            response.setCode(0);
-        } catch (Exception e) {
-            logger.error("Error:", e);
+		throw new Exception("Unknown request:" + header.getOp());
+	    }
 
-            response.setCode(1);
-        }
+	    response.setCode(0);
+	} catch (Exception e) {
+	    logger.error("Error:", e);
 
-        if (result != null) {
-            response.setResult(result);
-        } else {
-            logger.error("Result is null");
-        }
+	    response.setCode(1);
+	}
 
-        String out;
-        out = objectMapper.writeValueAsString(response);
+	if (result != null) {
+	    response.setResult(result);
+	} else {
+	    logger.error("Result is null");
+	}
 
-        return out;
+	String out;
+	out = objectMapper.writeValueAsString(response);
+
+	return out;
     }
 
     private InfoResponse info(InfoRequest request) throws IOException {
-        String table = request.getTable();
-        Table info = getTable(table);
-        InfoResponse response = new InfoResponse();
-        if (info == null) {
-            return response;
-        }
-        response.setKey(info.getKey());
-        response.setIndices(info.getIndices());
+	String table = request.getTable();
+	Table info = getTable(table);
+	InfoResponse response = new InfoResponse();
+	if (info == null) {
+	    return response;
+	}
+	response.setKey(info.getKey());
+	response.setIndices(info.getIndices());
 
-        return response;
+	return response;
     }
-    
+
     public SelectResponse select(SelectRequest request) throws Exception {
-    	String table = request.getTable();
-        Integer num = request.getNum();
-        Table info = getTable(table);
-        
-        if(info == null) {
-          SelectResponse response = new SelectResponse();
-          return response;
-        }
-        
-        String key = request.getKey();
-        List<List<String>> condition = request.getCondition();
-        logger.debug("key:{} condition:{}",key,condition);
-        //JSONArray obj = JSONArray.parseArray(condition);
-        //logger.debug("key:{} condition obj:{}",key,obj);
-        Map<String,Condition >	conditionmap = new HashMap<String, Condition >();
-        if(condition != null) {
-          for(List<String> cond: condition) {
-            if(cond.size() < 3) {
-              throw new Exception("Invalid cond:" + cond.stream().reduce((a,b) -> a +", " +b));
-            }
-            
-            Condition condItem = new Condition();
-            condItem.setOp(Condition.valueOf(Integer.parseInt(cond.get(1))));
-            condItem.setValue(cond.get(2));
-            
-            conditionmap.put(cond.get(0), condItem);
-          }
-        }
-        
-        /*
-        for(int index=0;index<obj.size();index++)
-        {
-        	JSONObject ss = obj.getJSONObject(index);
-        	String keyFileld = ss.getString("field_key");
-        	int op = ss.getIntValue("op");
-        	String keyValue = 	ss.getString("field_value");
-        	Condition conditionItem  = new Condition();
-        	conditionItem.setOp(Condition.valueOf(op));
-        	conditionItem.setValue(keyValue);
-        	conditionmap.put(keyFileld,conditionItem);
-        }
-        */
-        StringBuilder sb = new StringBuilder();
-        Iterator<java.util.Map.Entry<String, Condition>> entries 
-        	= conditionmap.entrySet().iterator();
-        while (entries.hasNext())
-        {
-        	 Map.Entry<String, Condition> entry = entries.next();
-        	 logger.debug("key:{}",entry.getKey());
-        	 Condition value = entry.getValue();
-        	 
-        	 String strKeyEscape = StringEscapeUtils.escapeJava(entry.getKey());
-        	 
-        	 if(value.getOp()  == org.bcos.amdb.dto.Condition.ConditionOp.eq)
-        	 {
-        		 sb.append(" and `").append(strKeyEscape).append("` = ");
-        		 sb.append("'").append(StringEscapeUtils.escapeJava(value.getValue()));
-        		 sb.append("'");
-        	 }
-        	 
-        	 else if(value.getOp()  == org.bcos.amdb.dto.Condition.ConditionOp.ne)
-        	 {
-        		 sb.append(" and `").append(strKeyEscape).append("` != ");
-        		 sb.append("'").append(StringEscapeUtils.escapeJava(value.getValue()));
-        		 sb.append("'");
-        	 }
-        	 
-        	 else if(value.getOp()  == org.bcos.amdb.dto.Condition.ConditionOp.gt)
-        	 {
-        		 sb.append(" and `").append(strKeyEscape).append("` > ");
-        		 sb.append("'").append(StringEscapeUtils.escapeJava(value.getValue()));
-        		 sb.append("'");
-        	 }
-        	 
-        	 else if(value.getOp()  == org.bcos.amdb.dto.Condition.ConditionOp.ge)
-        	 {
-        		 sb.append(" and `").append(strKeyEscape).append("` >= ");
-        		 sb.append("'").append(StringEscapeUtils.escapeJava(value.getValue()));
-        		 sb.append("'");
-        	 }
-        	 
-        	 else if(value.getOp()  == org.bcos.amdb.dto.Condition.ConditionOp.lt)
-        	 {
-        		 sb.append(" and `").append(strKeyEscape).append("` < ");
-        		 sb.append("'").append(StringEscapeUtils.escapeJava(value.getValue()));
-        		 sb.append("'");
-        	 }
-        	 
-        	 else if(value.getOp()  == org.bcos.amdb.dto.Condition.ConditionOp.le)
-        	 {
-        		 sb.append(" and `").append(strKeyEscape).append("` <=");
-        		 sb.append("'").append(StringEscapeUtils.escapeJava(value.getValue()));
-        		 sb.append("'");
-        	 }
-        	 else
-        	 {
-        		 logger.error("error condition op:{}",value.getOp());
-        		 continue;
-        	 }
-        }
-        
-        String	conditionsql = sb.toString();
-        logger.debug("condition sql:{}",conditionsql);
-        
-        SelectResponse response = new SelectResponse();
-        List<Map<String, Object>> data = null;
-        logger.debug("key:{} table:{} number:{} index{}  key_value:{} condition:{}", 
-        		key,table,num,info.indicesEqualString(),info.getKey(),
-        		conditionsql);
-        
-        data = dataMapper.queryData(table,
-        		num,info.indicesEqualString(),
-        		info.getKey(),key,conditionsql);
-        
-        if (!data.isEmpty()) 
-        {
-        	logger.debug("condition sql:{} has data", conditionsql);
-            Map<String, Object> f = data.get(0);
-            response.setColumns(f.keySet());
-            List<List<Object>> allValues = new ArrayList<List<Object>>();
-            for (Map<String, Object> line : data) 
-            {
-                List<Object> values = new ArrayList<Object>();
-                for (String field : line.keySet()) 
-                {
-                    values.add(line.get(field));
-                }
-                allValues.add(values);
-          }
-           response.setData(allValues);
-        } 
-        else 
-        {
-        	logger.debug("condition sql:{} has no data", conditionsql);
-            response.setColumns(new HashSet<String>());
-            response.setData(new ArrayList<List<Object>>());
-        }
-        return response;
+	String table = request.getTable();
+	Integer num = request.getNum();
+	Table info = getTable(table);
+
+	if (info == null) {
+	    SelectResponse response = new SelectResponse();
+	    return response;
+	}
+
+	String key = request.getKey();
+	List<List<String>> condition = request.getCondition();
+	logger.debug("key:{} condition:{}", key, condition);
+	Map<String, Condition> conditionmap = new HashMap<String, Condition>();
+	if (condition != null) {
+	    for (List<String> cond : condition) {
+		if (cond.size() < 3) {
+		    throw new Exception("Invalid cond:" + cond.stream().reduce((a, b) -> a + ", " + b));
+		}
+
+		Condition condItem = new Condition();
+		condItem.setOp(Condition.valueOf(Integer.parseInt(cond.get(1))));
+		condItem.setValue(cond.get(2));
+
+		conditionmap.put(cond.get(0), condItem);
+	    }
+	}
+
+	StringBuilder sb = new StringBuilder();
+	Iterator<java.util.Map.Entry<String, Condition>> entries = conditionmap.entrySet().iterator();
+	while (entries.hasNext()) {
+	    Map.Entry<String, Condition> entry = entries.next();
+	    logger.debug("key:{}", entry.getKey());
+	    Condition value = entry.getValue();
+
+	    String strKeyEscape = StringEscapeUtils.escapeJava(entry.getKey());
+
+	    if (value.getOp() == org.bcos.amdb.dto.Condition.ConditionOp.eq) {
+		sb.append(" and `").append(strKeyEscape).append("` = ");
+		sb.append("'").append(StringEscapeUtils.escapeJava(value.getValue()));
+		sb.append("'");
+	    }
+
+	    else if (value.getOp() == org.bcos.amdb.dto.Condition.ConditionOp.ne) {
+		sb.append(" and `").append(strKeyEscape).append("` != ");
+		sb.append("'").append(StringEscapeUtils.escapeJava(value.getValue()));
+		sb.append("'");
+	    }
+
+	    else if (value.getOp() == org.bcos.amdb.dto.Condition.ConditionOp.gt) {
+		sb.append(" and `").append(strKeyEscape).append("` > ");
+		sb.append("'").append(StringEscapeUtils.escapeJava(value.getValue()));
+		sb.append("'");
+	    }
+
+	    else if (value.getOp() == org.bcos.amdb.dto.Condition.ConditionOp.ge) {
+		sb.append(" and `").append(strKeyEscape).append("` >= ");
+		sb.append("'").append(StringEscapeUtils.escapeJava(value.getValue()));
+		sb.append("'");
+	    }
+
+	    else if (value.getOp() == org.bcos.amdb.dto.Condition.ConditionOp.lt) {
+		sb.append(" and `").append(strKeyEscape).append("` < ");
+		sb.append("'").append(StringEscapeUtils.escapeJava(value.getValue()));
+		sb.append("'");
+	    }
+
+	    else if (value.getOp() == org.bcos.amdb.dto.Condition.ConditionOp.le) {
+		sb.append(" and `").append(strKeyEscape).append("` <=");
+		sb.append("'").append(StringEscapeUtils.escapeJava(value.getValue()));
+		sb.append("'");
+	    } else {
+		logger.error("error condition op:{}", value.getOp());
+		continue;
+	    }
+	}
+
+	String conditionsql = sb.toString();
+	logger.debug("condition sql:{}", conditionsql);
+
+	SelectResponse response = new SelectResponse();
+	List<Map<String, Object>> data = null;
+	logger.debug("key:{} table:{} number:{} index{}  key_value:{} condition:{}", key, table, num,
+		info.indicesEqualString(), info.getKey(), conditionsql);
+
+	data = dataMapper.queryData(table, num, info.indicesEqualString(), info.getKey(), key, conditionsql);
+
+	if (!data.isEmpty()) {
+	    logger.debug("condition sql:{} has data", conditionsql);
+	    Map<String, Object> f = data.get(0);
+	    response.setColumns(f.keySet());
+	    List<List<Object>> allValues = new ArrayList<List<Object>>();
+	    for (Map<String, Object> line : data) {
+		List<Object> values = new ArrayList<Object>();
+		for (String field : line.keySet()) {
+		    values.add(line.get(field));
+		}
+		allValues.add(values);
+	    }
+	    response.setData(allValues);
+	} else {
+	    logger.debug("condition sql:{} has no data", conditionsql);
+	    response.setColumns(new HashSet<String>());
+	    response.setData(new ArrayList<List<Object>>());
+	}
+	return response;
     }
-    
+
     private CommitResponse commit(CommitRequest request) throws Exception {
-        Integer count = 0;
-        
-        processNewTable(request.getBlockHash(), request.getNum(), request.getData());
-        
-        Map<Table, List<String>> update =
-                DBReplace(request.getBlockHash(), request.getNum(), request.getData());
-        
-        count = update.size();
-        CommitResponse response = new CommitResponse();
-        response.setCount(count);
-        return response;
+	Integer count = 0;
+
+	processNewTable(request.getBlockHash(), request.getNum(), request.getData());
+
+	Map<Table, List<String>> update = DBReplace(request.getBlockHash(), request.getNum(), request.getData());
+
+	count = update.size();
+	CommitResponse response = new CommitResponse();
+	response.setCount(count);
+	return response;
     }
-    
-  private void processNewTable(String hash, Integer num, List<TableData> data) throws Exception {
-    for (TableData tableData : data) {
-      if (tableData.getTable().equals("_sys_tables_")) {
-        // create table if _sys_tables got new table
-        for (Map<String, String> line : tableData.getEntries()) {
-          String id = line.get("_id_");
 
-          //if (id.equals("0")) {
-          if(true) {
-            // new table
+    private void processNewTable(String hash, Integer num, List<TableData> data) throws Exception {
+	for (TableData tableData : data) {
+	    if (tableData.getTable().equals("_sys_tables_")) {
+		// create table if _sys_tables got new table
+		for (Map<String, String> line : tableData.getEntries()) {
+		    // new table
+		    String tableName = line.get("table_name");
+		    String keyField = line.get("key_field");
+		    String valueField = line.get("value_field");
 
-            String tableName = line.get("table_name");
-            String keyField = line.get("key_field");
-            String valueField = line.get("value_field");
+		    createTable(tableName, keyField, valueField);
+		}
 
-            createTable(tableName, keyField, valueField);
-          }
-        }
-
-        break;
-      }
+		break;
+	    }
+	}
     }
-  }
 
     @Transactional
-    private Map<Table, List<String>> DBReplace(String hash, Integer num, List<TableData> data)
-            throws Exception {
-        Map<Table, List<String>> updateKeys = new HashMap<Table, List<String>>();
+    private Map<Table, List<String>> DBReplace(String hash, Integer num, List<TableData> data) throws Exception {
+	try {
+	    Map<Table, List<String>> updateKeys = new HashMap<Table, List<String>>();
 
-        for (TableData tableData : data) {
-            List<BatchCommitRequest> list = new ArrayList<>();
-            String _table = null;
-            String _fields = null;
+	    for (TableData tableData : data) {
+		List<BatchCommitRequest> list = new ArrayList<>();
+		String _table = null;
+		String _fields = null;
 
-            for (Map<String, String> entry : tableData.getEntries()) {
-              /*
-                String key = entry.getKey();
+		for (Map<String, String> entry : tableData.getEntries()) {
+		    StringBuffer sbFields = new StringBuffer();
+		    StringBuffer sbValues = new StringBuffer();
 
-                if (cache != null) {
-                    cache.remove(key);
-                }
-                */
+		    for (Map.Entry<String, String> line : entry.entrySet()) {
+			if (line.getKey().equals("_num_") || line.getKey().equals("_hash_")) {
+			    continue;
+			}
 
-                //for (Map<String, String> fields : entry.getValues()) {
-                    StringBuffer sbFields = new StringBuffer();
-                    StringBuffer sbValues = new StringBuffer();
+			sbFields.append("`");
+			sbFields.append(replaceString(line.getKey()));
+			sbFields.append("`,");
 
-                    for (Map.Entry<String, String> line : entry.entrySet()) {
-                        if (line.getKey().equals("_num_") || line.getKey().equals("_hash_")) {
-                            continue;
-                        }
-                        
-                        sbFields.append("`");
-                        sbFields.append(replaceString(line.getKey()));
-                        sbFields.append("`,");
-                        
-                        if(line.getKey().equals("_id_") && line.getValue().equals("0")) {
-                          sbValues.append("NULL,");
-                        }
-                        else {
-                          sbValues.append("'");
-                          sbValues.append(replaceString(line.getValue()));
-                          sbValues.append("',");
-                        }
-                    }
+			sbValues.append("'");
+			sbValues.append(replaceString(line.getValue()));
+			sbValues.append("',");
+		    }
 
-                    // batch data to be inserted into the list
-                    BatchCommitRequest batchCommitRequest = new BatchCommitRequest();
-                    batchCommitRequest.setHash(hash);
-                    batchCommitRequest.setNum(num);
-                    batchCommitRequest.setValues(sbValues.toString());
-                    list.add(batchCommitRequest);
+		    // batch data to be inserted into the list
+		    BatchCommitRequest batchCommitRequest = new BatchCommitRequest();
+		    batchCommitRequest.setHash(hash);
+		    batchCommitRequest.setNum(num);
+		    batchCommitRequest.setValues(sbValues.toString());
+		    list.add(batchCommitRequest);
 
-                    if (_table == null) {
-                        _table = tableData.getTable();
-                    }
+		    if (_table == null) {
+			_table = tableData.getTable();
+		    }
 
-                    if (_fields == null) {
-                        _fields = sbFields.toString();
-                    }
+		    if (_fields == null) {
+			_fields = sbFields.toString();
+		    }
+		}
 
-                //}
+		if (_table != null && _fields != null && list.size() > 0) {
 
-                //keys.add(entry.getKey());
-            }
+		    dataMapper.commitData(_table, _fields, list);
+		}
+	    }
 
-            //updateKeys.put(table, keys);
-            if (_table != null && _fields != null && list.size() > 0) {
-
-                dataMapper.commitData(_table, _fields, list);
-            }
-        }
-
-        return updateKeys;
+	    return updateKeys;
+	} catch (Exception e) {
+	    logger.error("Error while commit data ", e);
+	    throw e;
+	}
     }
 
     private Table getTable(String table_name) {
-        List<Map<String, String>> fields = dataMapper.getTable(table_name);
-        Table table = null;
-        if (fields.isEmpty()) {
-            logger.error("Cannot find the table: {}", table_name);
-        } else {
-            table = new Table();
-            table.setName(table_name);
-            String key = fields.get(0).get("key_field");
-            table.setKey(key);
-            List<String> indices = Arrays.asList(key);
-            table.setCache(new MemoryCache(3));
-            table.setIndices(indices);
-        }
-        return table;
+	List<Map<String, String>> fields = dataMapper.getTable(table_name);
+	Table table = null;
+	if (fields.isEmpty()) {
+	    logger.error("Cannot find the table: {}", table_name);
+	} else {
+	    table = new Table();
+	    table.setName(table_name);
+	    String key = fields.get(0).get("key_field");
+	    table.setKey(key);
+	    List<String> indices = Arrays.asList(key);
+	    table.setCache(new MemoryCache(3));
+	    table.setIndices(indices);
+	}
+	return table;
     }
-    
+
     public void createTable(String tableName, String keyField, String valueField) throws Exception {
-      logger.debug("create tablename:{}",tableName);
-        String key = keyField;
-        String value_field = valueField;
-        String[] values = value_field.split(",");
-        String sql = getSql(getStrSql(tableName), getStrSql(key), values);
-        dataMapper.createTable(sql);
+	logger.debug("create tablename:{}", tableName);
+	String key = keyField;
+	String value_field = valueField;
+	String[] values = value_field.split(",");
+	String sql = getSql(getStrSql(tableName), getStrSql(key), values);
+	dataMapper.createTable(sql);
 
     }
 
     public void createTable(String table_name) throws Exception {
-    	
-    	logger.debug("create tablename:{}",table_name);
-        List<Map<String, String>> fields = dataMapper.getTable(table_name);
-        logger.debug("fields=" + fields.toString());
-        String key = fields.get(0).get("key_field");
-        String value_field = fields.get(0).get("value_field");
-        String[] values = value_field.split(",");
-        String sql = getSql(getStrSql(table_name), getStrSql(key), values);
-        dataMapper.createTable(sql);
+
+	logger.debug("create tablename:{}", table_name);
+	List<Map<String, String>> fields = dataMapper.getTable(table_name);
+	logger.debug("fields=" + fields.toString());
+	String key = fields.get(0).get("key_field");
+	String value_field = fields.get(0).get("value_field");
+	String[] values = value_field.split(",");
+	String sql = getSql(getStrSql(table_name), getStrSql(key), values);
+	dataMapper.createTable(sql);
 
     }
 
     private String getSql(String table_name, String key, String[] values) {
-        StringBuilder sql = new StringBuilder();
-        sql.append("CREATE TABLE IF NOT EXISTS ").append("`").append(table_name).append("`")
-                .append("(\n").append(" `_id_` int unsigned auto_increment,\n")
-                .append(" `_hash_` varchar(128) not null,\n").append("  `_num_` int not null,\n")
-                .append("`_status_` int not null,\n").append("`").append(key).append("`")
-                .append(" varchar(128) default '',\n");
-        if (!"".equals(values[0].trim())) {
-            for (String value : values) {
-                sql.append(" `").append(getStrSql(value)).append("` text,\n");
-            }
-        }
-        sql.append(" PRIMARY KEY( `_id_` ),\n").append(" KEY(`").append(key).append("`),\n")
-                .append(" KEY(`_num_`)\n").append(")ENGINE=InnoDB default charset=utf8mb4;");
-        return sql.toString();
+	StringBuilder sql = new StringBuilder();
+	sql.append("CREATE TABLE IF NOT EXISTS ").append("`").append(table_name).append("`").append("(\n")
+		.append(" `_id_` int unsigned auto_increment,\n").append(" `_hash_` varchar(128) not null,\n")
+		.append("  `_num_` int not null,\n").append("`_status_` int not null,\n").append("`").append(key)
+		.append("`").append(" varchar(128) default '',\n");
+	if (!"".equals(values[0].trim())) {
+	    for (String value : values) {
+		sql.append(" `").append(getStrSql(value)).append("` text,\n");
+	    }
+	}
+	sql.append(" PRIMARY KEY( `_id_` ),\n").append(" KEY(`").append(key).append("`),\n").append(" KEY(`_num_`)\n")
+		.append(")ENGINE=InnoDB default charset=utf8mb4;");
+	return sql.toString();
     }
 
     private String replaceString(String str) {
-        String replaceStr = str;
-        replaceStr = replaceStr.replace('\'', '_');
-        replaceStr = replaceStr.replace('\"', '_');
-        return replaceStr;
+	String replaceStr = str;
+	replaceStr = replaceStr.replace('\'', '_');
+	replaceStr = replaceStr.replace('\"', '_');
+	return replaceStr;
 
     }
 
     private String getStrSql(String str) {
-        String strSql = str;
-        strSql = strSql.replace("\\", "\\\\");
-        strSql = strSql.replace("`", "\\`");
-        return strSql;
+	String strSql = str;
+	strSql = strSql.replace("\\", "\\\\");
+	strSql = strSql.replace("`", "\\`");
+	return strSql;
     }
 
     public DataMapper getDataMapper() {
-        return dataMapper;
+	return dataMapper;
     }
 
     public void setDataMapper(DataMapper dataMapper) {
-        this.dataMapper = dataMapper;
+	this.dataMapper = dataMapper;
     }
 
     public Map<String, Table> getTables() {
-        return tables;
+	return tables;
     }
 
     public void setTables(Map<String, Table> tables) {
-        this.tables = tables;
+	this.tables = tables;
     }
 
     @Autowired

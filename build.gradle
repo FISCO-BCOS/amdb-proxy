@@ -61,8 +61,8 @@ dependencies {
    	compile 'org.ethereum:solcJ-all:0.4.25'
    	runtime 'org.ethereum:solcJ-all:0.4.25'
    	
-   	compile 'org.fisco-bcos:web3sdk:2.0.0-rc1'
-   	runtime 'org.fisco-bcos:web3sdk:2.0.0-rc1'
+   	compile 'org.fisco-bcos:web3sdk:2.0.2-SNAPSHOT'
+   	runtime 'org.fisco-bcos:web3sdk:2.0.2-SNAPSHOT'
 }
 
 sourceSets {
