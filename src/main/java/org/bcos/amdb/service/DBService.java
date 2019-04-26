@@ -348,7 +348,7 @@ public class DBService {
 	List<Map<String, String>> fields = dataMapper.getTable(table_name);
 	Table table = null;
 	if (fields.isEmpty()) {
-	    logger.error("Cannot find the table: {}", table_name);
+	    //logger.error("Cannot find the table: {}", table_name);
 	} else {
 	    table = new Table();
 	    table.setName(table_name);
