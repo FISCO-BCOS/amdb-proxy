@@ -135,7 +135,7 @@ public class DBService {
 	return out;
     }
 
-    private InfoResponse info(InfoRequest request) throws IOException {
+    public InfoResponse info(InfoRequest request) throws IOException {
 	String table = request.getTable();
 	Table info = getTable(table);
 	InfoResponse response = new InfoResponse();
@@ -256,7 +256,8 @@ public class DBService {
 	return response;
     }
 
-    private CommitResponse commit(CommitRequest request) throws Exception {
+    @Transactional
+    public CommitResponse commit(CommitRequest request) throws Exception {
 	Integer count = 0;
 
 	processNewTable(request.getBlockHash(), request.getNum(), request.getData());
@@ -269,7 +270,8 @@ public class DBService {
 	return response;
     }
 
-    private void processNewTable(String hash, Integer num, List<TableData> data) throws Exception {
+    @Transactional
+    public void processNewTable(String hash, Integer num, List<TableData> data) throws Exception {
 	for (TableData tableData : data) {
 	    if (tableData.getTable().equals("_sys_tables_")) {
 		// create table if _sys_tables got new table
@@ -288,7 +290,7 @@ public class DBService {
     }
 
     @Transactional
-    private Map<Table, List<String>> DBReplace(String hash, Integer num, List<TableData> data) throws Exception {
+    public Map<Table, List<String>> DBReplace(String hash, Integer num, List<TableData> data) throws Exception {
 	try {
 	    Map<Table, List<String>> updateKeys = new HashMap<Table, List<String>>();
 
