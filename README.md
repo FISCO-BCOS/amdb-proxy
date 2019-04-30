@@ -1,7 +1,7 @@
 # AMDB使用指南
 
 **使用说明：** 
-使用本文档之前，需要先利用 FISCO-BCOS1.5 搭建一条区块链([FISCO BCOS使用说明书](https://fisco-bcos-documentation.readthedocs.io/zh_CN/release-2.0.0-rc2/))。
+使用本文档之前，需要先利用 FISCO-BCOS1.5 搭建一条区块链([FISCO BCOS使用说明书](https://fisco-bcos-documentation.readthedocs.io/zh_CN/release-2.0/))。
 
 ## AMDB 介绍
 AMDB(Advanced Mass Database, 分布式存储)为联盟链的智能合约提供高性能、可无限扩展容量的存储服务，其特性如下:
