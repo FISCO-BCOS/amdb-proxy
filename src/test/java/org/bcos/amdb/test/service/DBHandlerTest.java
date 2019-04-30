@@ -10,8 +10,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import org.bcos.amdb.service.DBHandler;
 import org.bcos.amdb.service.DBService;
-import org.bcos.channel.dto.ChannelPush;
-import org.bcos.channel.dto.ChannelResponse;
+import org.fisco.bcos.channel.dto.ChannelPush;
+import org.fisco.bcos.channel.dto.ChannelResponse;
 
 public class DBHandlerTest {
 	public class MockChannelPush extends ChannelPush {

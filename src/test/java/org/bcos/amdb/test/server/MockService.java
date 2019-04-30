@@ -1,6 +1,5 @@
 package org.bcos.amdb.test.server;
-
-import org.bcos.channel.client.Service;
+import org.fisco.bcos.channel.client.Service;
 
 public class MockService extends Service {
 	private Boolean throwEx = false;

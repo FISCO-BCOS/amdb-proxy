@@ -40,7 +40,6 @@ import org.bcos.amdb.dto.SelectResponse;
 import org.bcos.amdb.dto.TableData;
 import org.bcos.amdb.service.DBService;
 import org.bcos.amdb.service.Table;
-import org.bcos.channel.client.Service;
 
 public class DBServiceTest {
   public class MockDataMapper implements DataMapper {
@@ -48,7 +47,7 @@ public class DBServiceTest {
 
     @Override
     public List<Map<String, Object>> queryData(String table, Integer num, String indices_equal,
-        String keyField, String keyValue) {
+        String keyField, String keyValue,String ConditionSql) {
       if (keyValue.equals("no exists")) {
         return new ArrayList<Map<String, Object>>();
       }
@@ -207,12 +206,46 @@ public class DBServiceTest {
       // TODO Auto-generated method stub
       
     }
-
-    @Override
-    public void createSysMiners() {
-      // TODO Auto-generated method stub
-      
+    
+    
+    public void createSysConsensus()
+    {
+    	// TODO Auto-generated method stub
     }
+    public void	createAccessTables()
+    {
+    	// TODO Auto-generated method stub
+    }
+    
+    public void createCurrentStateTables()
+    {
+    	// TODO Auto-generated method stub
+    }
+    public void createNumber2HashTables()
+    {
+    	// TODO Auto-generated method stub
+    }
+    public void createTxHash2BlockTables()
+    {
+    	// TODO Auto-generated method stub
+    }
+    public void createHash2BlockTables()
+    {
+    	// TODO Auto-generated method stub
+    }
+    public void createCnsTables()
+    {
+    	// TODO Auto-generated method stub
+    }
+    public void createSysConfigTables()
+    {
+    	// TODO Auto-generated method stub
+    }
+    public void createSysBlock2NoncesTables()
+    {
+    	// TODO Auto-generated method stub
+    }
+    
     
   }
 
