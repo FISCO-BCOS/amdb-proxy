@@ -34,7 +34,7 @@ Please see the [documentation](https://fisco-bcos-documentation.readthedocs.io/z
 - Star our Github.
 - Pull requests. See [CONTRIBUTING](CONTRIBUTING.md).
 - [Ask questions](https://github.com/FISCO-BCOS/AMDB/issues).
-- Discuss in [WeChat group](images/WeChatQR.jpeg)  or [Gitter](https://gitter.im/fisco-bcos/Lobby).
+- Discuss in [WeChat group](image/WeChatQR.jpeg)  or [Gitter](https://gitter.im/fisco-bcos/Lobby).
 
 ## Community
 
