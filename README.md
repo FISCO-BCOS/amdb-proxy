@@ -34,13 +34,13 @@ Please see the [documentation](https://fisco-bcos-documentation.readthedocs.io/z
 - Star our Github.
 - Pull requests. See [CONTRIBUTING](CONTRIBUTING.md).
 - [Ask questions](https://github.com/FISCO-BCOS/AMDB/issues).
-- Discuss in [WeChat group](image/WeChatQR.jpeg)  or [Gitter](https://gitter.im/fisco-bcos/Lobby).
+- Discuss in [WeChat group](image/WeChatQR.jpg)  or [Gitter](https://gitter.im/fisco-bcos/Lobby).
 
 ## Community
 
 By the end of 2018, Financial Blockchain Shenzhen Consortium (FISCO) has attracted and admitted more than 100 members from 6 sectors including banking, fund management, securities brokerage, insurance, regional equity exchanges, and financial information service companies. The first members include the following organizations: Beyondsoft, Huawei, Shenzhen Securities Communications, Digital China, Forms Syntron, Tencent, WeBank, Yuexiu FinTech.
 
-- Join our WeChat [![Scan](https://img.shields.io/badge/style-Scan_QR_Code-green.svg?logo=wechat&longCache=false&style=social&label=Group)](images/WeChatQR.jpeg) 
+- Join our WeChat [![Scan](https://img.shields.io/badge/style-Scan_QR_Code-green.svg?logo=wechat&longCache=false&style=social&label=Group)](image/WeChatQR.jpg) 
 
 - Discuss in [![Gitter](https://img.shields.io/badge/style-on_gitter-green.svg?logo=gitter&longCache=false&style=social&label=Chat)](https://gitter.im/fisco-bcos/Lobby) 
 
