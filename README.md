@@ -1,7 +1,4 @@
 # AMDB
-[![GitHub All Releases](https://img.shields.io/github/downloads/FISCO-BCOS/AMDB/total.svg)](https://github.com/FISCO-BCOS/AMDB)
----
-
 In order to overcome the limitations of local storage in version 1.0,we add support for distributed storage system in version 2.0,which is called AMDB.
 AMDB has following advantages:
 - It supports multiple storage engines and chooses highly available distributed storage system which can support data expansion easily and quickly.
