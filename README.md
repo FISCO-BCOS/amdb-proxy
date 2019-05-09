@@ -24,7 +24,7 @@ AMDB has following advantages:
 ## Source Installation
 ```bash
 git clone https://github.com/FISCO-BCOS/AMDB.git
-cd AMDB;gradle build
+cd AMDB && gradle build
 ```
 If you install successfully, it produces the `dist` directory.
 
