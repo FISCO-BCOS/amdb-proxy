@@ -1,4 +1,11 @@
 中文 / [English](./README.md)
+
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
+[![Build Status](https://travis-ci.org/FISCO-BCOS/AMDB.svg?branch=master)](https://travis-ci.org/FISCO-BCOS/AMDB)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/e76b787651514cccadd0a22a409e4dd0)](https://www.codacy.com/app/fisco/AMDB?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=FISCO-BCOS/AMDB&amp;utm_campaign=Badge_Grade)
+[![GitHub All Releases](https://img.shields.io/github/downloads/FISCO-BCOS/AMDB/total.svg)](https://github.com/FISCO-BCOS/AMDB)
+---
+
 # AMDB
 AMDB 2.0版本中新增了对分布式数据存储的支持，克服了本地化数据存储的诸多限制，和1.0版本相比有如下优势：
 - 支持多种存储引擎，选用高可用的分布式存储系统，可以支持数据简便快速地扩容；
