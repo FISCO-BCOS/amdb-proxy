@@ -4,4 +4,13 @@
 
 **New Feature**
 
-*支持分布式存储
+*AMDB服务提供了FISCO-BCOS 2.0接入数据库的功能，包括：
+1. 提供数据库CRUD接口。
+2. 支持事务，支持连接池。
+3. 提供AMDB服务与节点之间的加密连接。
+
+
+*AMDB service provides database connectors for FISCO-BCOS nodes.
+1. Provide CRUD database interface
+2. Support transactions and connection pool.
+3. Support encrypted connections between AMDB service and FISCO-BCOS nodes (since 2.0.0-rc2).
