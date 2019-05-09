@@ -1,3 +1,4 @@
+English / [中文](./README_CN.md)
 # AMDB
 In order to overcome the limitations of local storage in version 1.0,we add support for distributed storage system in version 2.0,which is called AMDB.
 AMDB has following advantages:
