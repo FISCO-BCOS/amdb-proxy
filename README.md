@@ -1,3 +1,4 @@
+English / [中文](./README_CN.md)
 # console
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 [![Build Status](https://travis-ci.org/FISCO-BCOS/AMDB.svg?branch=master)](https://travis-ci.org/FISCO-BCOS/AMDB)
