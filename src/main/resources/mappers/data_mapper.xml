@@ -29,6 +29,24 @@
 	        </foreach>
     </insert>
     
+    
+    <update id="setMaxAllowedPacket" >
+    	set global max_allowed_packet = 65536;
+	</update>
+	
+	
+	<update id="beginTransaction" >
+    	 START TRANSACTION;
+	</update>
+	
+	<update id="commit" >
+    	COMMIT;
+	</update>
+	
+	<update id="rollback" >
+    	ROLLBACK;
+	</update>
+    
     <update id="createSysTables" >
 		CREATE TABLE IF NOT EXISTS `_sys_tables_` (
 		  `_id_`  int unsigned auto_increment,
