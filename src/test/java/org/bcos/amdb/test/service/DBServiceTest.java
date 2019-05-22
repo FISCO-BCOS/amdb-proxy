@@ -245,6 +245,30 @@ public class DBServiceTest {
     {
     	// TODO Auto-generated method stub
     }
+
+	@Override
+	public void setMaxAllowedPacket() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void beginTransaction() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void commit() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void rollback() {
+		// TODO Auto-generated method stub
+		
+	}
     
     
   }
@@ -338,224 +362,4 @@ public class DBServiceTest {
     assertEquals(0, select.getColumns().size());
     assertEquals(0, select.getData().size());
   }
-
-//  @Test
-//  void testSelectWithCache() throws IOException {
-//    Request<SelectRequest> request = new Request<SelectRequest>();
-//    request.setOp("select");
-//
-//    SelectRequest params = new SelectRequest();
-//    params.setBlockHash("00000");
-//    params.setNum(100);
-//    params.setTable("t_test_cache");
-//    params.setKey("key_field");
-//
-//    request.setParams(params);
-//    String content = objectMapper.writeValueAsString(request);
-//    String result = dbService.process(content);
-//
-//    MockResponse<SelectResponse> response =
-//        objectMapper.readValue(result, new TypeReference<MockResponse<SelectResponse>>() {});
-//    SelectResponse select = response.getResult();
-//
-//    assertEquals(select.getColumns(),
-//        Stream.of("field1", "field2", "field3").collect(Collectors.toSet()));
-//    assertEquals(6, select.getData().size());
-//
-//    // 检查cache
-//    Map<String, Table> tables = dbService.getTables();
-//    Table table = tables.get("t_test_cache");
-//    Cache cache = table.getCache();
-//
-//    CacheEntry entry = cache.get("key_field");
-//    // 此时LastCommitNum为0，数据不进cache
-//    assertNull(entry);
-//
-//    cache.setLastCommitNum(100);
-//    result = dbService.process(content);
-//    entry = cache.get("key_field");
-//    // LastCommitNum = 请求num，数据不进cache
-//    assertNull(entry);
-//
-//    cache.setLastCommitNum(99);
-//    result = dbService.process(content);
-//    entry = cache.get("key_field");
-//    // LastCommitNum < 请求num，数据进cache
-//    assertNotNull(entry);
-//    assertEquals(entry.getNum(), new Integer(100));
-//    assertEquals(entry.getKey(), "key_field");
-//
-//    List<CacheValues> values = entry.getValues();
-//    assertEquals(values.size(), 6);
-//    values.remove(values.size() - 1); // 删掉最后一个数据，从缓存获取数据，只有5条
-//
-//    // num == entry.getNum() 预期不命中cache，有6条数据
-//    result = dbService.process(content);
-//    response = objectMapper.readValue(result, new TypeReference<MockResponse<SelectResponse>>() {});
-//    select = response.getResult();
-//
-//    assertEquals(select.getColumns(),
-//        Stream.of("field1", "field2", "field3").collect(Collectors.toSet()));
-//    assertEquals(6, select.getData().size());
-//
-//    // num > entry.getNum()，预期命中，5条数据
-//    entry.setNum(99);
-//    result = dbService.process(content);
-//    response = objectMapper.readValue(result, new TypeReference<MockResponse<SelectResponse>>() {});
-//    select = response.getResult();
-//
-//    assertEquals(select.getColumns(),
-//        Stream.of("field1", "field2", "field3").collect(Collectors.toSet()));
-//    assertEquals(5, select.getData().size());
-//  }
-
-//  @Test
-//  void testCommitWithCache() throws IOException {
-//    Request<CommitRequest> request = new Request<CommitRequest>();
-//    request.setOp("commit");
-//
-//    CommitRequest params = new CommitRequest();
-//    params.setBlockHash("00000");
-//    params.setNum(100);
-//
-//    List<TableData> datas = new ArrayList<TableData>();
-//
-//    // 第一个表写入
-//    TableData data = new TableData();
-//    data.setTable("t_test_cache");
-//
-//    Entry entry = new Entry();
-//    entry.setKey("key_field");
-//
-//    List<Map<String, String>> values = new ArrayList<Map<String, String>>();
-//    values.add(Stream.of("field1:key_field1", "field2:1", "field3:1", "num:100", "hash:0x100")
-//        .collect(Collectors.toMap(v -> {
-//          return v.split(":")[0];
-//        }, v -> {
-//          return v.split(":")[1];
-//        })));
-//    values.add(Stream.of("field1:key_field1", "field2:2", "field3:2", "num:100", "hash:0x100")
-//        .collect(Collectors.toMap(v -> {
-//          return v.split(":")[0];
-//        }, v -> {
-//          return v.split(":")[1];
-//        })));
-//
-//    entry.setValues(values);
-//    List<Entry> entries = new ArrayList<Entry>();
-//    entries.add(entry);
-//    data.setEntries(entries);
-//    datas.add(data);
-//
-//    // 第二个表写入
-//    entries = new ArrayList<Entry>();
-//    entry = new Entry();
-//    entry.setKey("key_field");
-//    values = new ArrayList<Map<String, String>>();
-//    values.add(Stream.of("field1:key_field2", "field2:3", "field3:3", "num:100", "hash:0x100")
-//        .collect(Collectors.toMap(v -> {
-//          return v.split(":")[0];
-//        }, v -> {
-//          return v.split(":")[1];
-//        })));
-//    values.add(Stream.of("field1:key_field2", "field2:4", "field3:4", "num:100", "hash:0x100")
-//        .collect(Collectors.toMap(v -> {
-//          return v.split(":")[0];
-//        }, v -> {
-//          return v.split(":")[1];
-//        })));
-//
-//    entry.setValues(values);
-//    entries.add(entry);
-//
-//    data = new TableData();
-//
-//    data.setEntries(entries);
-//    data.setTable("t_test");
-//    datas.add(data);
-//
-//    // 第三个表写入
-//    entries = new ArrayList<Entry>();
-//    entry = new Entry();
-//    entry.setKey("key_field");
-//    values = new ArrayList<Map<String, String>>();
-//    values.add(Stream.of("field1:key_field2", "field2:3", "field3:3", "num:100", "hash:0x100")
-//        .collect(Collectors.toMap(v -> {
-//          return v.split(":")[0];
-//        }, v -> {
-//          return v.split(":")[1];
-//        })));
-//    values.add(Stream.of("field1:key_field2", "field2:4", "field3:4", "num:100", "hash:0x100")
-//        .collect(Collectors.toMap(v -> {
-//          return v.split(":")[0];
-//        }, v -> {
-//          return v.split(":")[1];
-//        })));
-//
-//    entry.setValues(values);
-//    entries.add(entry);
-//
-//    data = new TableData();
-//
-//    data.setEntries(entries);
-//    data.setTable("t_unknown");
-//    datas.add(data);
-//
-//    params.setData(datas);
-//
-//    request.setParams(params);
-//    String content = objectMapper.writeValueAsString(request);
-//    ((MockDataMapper) dbService.getDataMapper()).setBlockNum(101);
-//    String result = dbService.process(content);
-//
-//    MockResponse<CommitResponse> response =
-//        objectMapper.readValue(result, new TypeReference<MockResponse<CommitResponse>>() {});
-//    assertEquals(new Integer(0), response.getCode());
-//
-//    CommitResponse commit = response.getResult();
-//    assertEquals(new Integer(1), commit.getCount());
-//
-//    // 检查cache
-//    Map<String, Table> tables = dbService.getTables();
-//    Table table = tables.get("t_test_cache");
-//    Cache cache = table.getCache();
-//
-//    CacheEntry cacheEntry = cache.get("key_field");
-//    assertEquals(new Integer(101), cacheEntry.getNum());
-//    assertEquals(6, cacheEntry.getValues().size());
-//  }
-
-//  @Test
-//  void testUnknownCommand() throws IOException {
-//    Request<SelectRequest> request = new Request<SelectRequest>();
-//    request.setOp("select1");
-//
-//    SelectRequest params = new SelectRequest();
-//    params.setBlockHash("00000");
-//    params.setNum(100);
-//    params.setTable("t_test");
-//    params.setKey("key_field");
-//
-//    request.setParams(params);
-//    String content = objectMapper.writeValueAsString(request);
-//    String result = dbService.process(content);
-//
-//    MockResponse<SelectResponse> response =
-//        objectMapper.readValue(result, new TypeReference<MockResponse<SelectResponse>>() {});
-//
-//    assertEquals(new Integer(-1), response.getCode());
-//
-//    request.setOp(null);
-//    content = objectMapper.writeValueAsString(request);
-//    result = dbService.process(content);
-//    response = objectMapper.readValue(result, new TypeReference<MockResponse<SelectResponse>>() {});
-//
-//    assertEquals(new Integer(-1), response.getCode());
-//
-//    content = "";
-//    result = dbService.process(content);
-//    response = objectMapper.readValue(result, new TypeReference<MockResponse<SelectResponse>>() {});
-//
-//    assertEquals(new Integer(-1), response.getCode());
-//  }
 }
