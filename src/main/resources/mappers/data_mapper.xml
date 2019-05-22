@@ -31,7 +31,7 @@
     
     
     <update id="setMaxAllowedPacket" >
-    	set global max_allowed_packet = 65536;
+    	set global max_allowed_packet = 1073741824;
 	</update>
 	
 	
