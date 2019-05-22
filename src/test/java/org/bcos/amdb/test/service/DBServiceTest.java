@@ -245,6 +245,30 @@ public class DBServiceTest {
     {
     	// TODO Auto-generated method stub
     }
+
+	@Override
+	public void setMaxAllowedPacket() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void beginTransaction() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void commit() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void rollback() {
+		// TODO Auto-generated method stub
+		
+	}
     
     
   }
@@ -362,34 +386,34 @@ public class DBServiceTest {
 //        Stream.of("field1", "field2", "field3").collect(Collectors.toSet()));
 //    assertEquals(6, select.getData().size());
 //
-//    // 检查cache
+//    // 妫�鏌ache
 //    Map<String, Table> tables = dbService.getTables();
 //    Table table = tables.get("t_test_cache");
 //    Cache cache = table.getCache();
 //
 //    CacheEntry entry = cache.get("key_field");
-//    // 此时LastCommitNum为0，数据不进cache
+//    // 姝ゆ椂LastCommitNum涓�0锛屾暟鎹笉杩沜ache
 //    assertNull(entry);
 //
 //    cache.setLastCommitNum(100);
 //    result = dbService.process(content);
 //    entry = cache.get("key_field");
-//    // LastCommitNum = 请求num，数据不进cache
+//    // LastCommitNum = 璇锋眰num锛屾暟鎹笉杩沜ache
 //    assertNull(entry);
 //
 //    cache.setLastCommitNum(99);
 //    result = dbService.process(content);
 //    entry = cache.get("key_field");
-//    // LastCommitNum < 请求num，数据进cache
+//    // LastCommitNum < 璇锋眰num锛屾暟鎹繘cache
 //    assertNotNull(entry);
 //    assertEquals(entry.getNum(), new Integer(100));
 //    assertEquals(entry.getKey(), "key_field");
 //
 //    List<CacheValues> values = entry.getValues();
 //    assertEquals(values.size(), 6);
-//    values.remove(values.size() - 1); // 删掉最后一个数据，从缓存获取数据，只有5条
+//    values.remove(values.size() - 1); // 鍒犳帀鏈�鍚庝竴涓暟鎹紝浠庣紦瀛樿幏鍙栨暟鎹紝鍙湁5鏉�
 //
-//    // num == entry.getNum() 预期不命中cache，有6条数据
+//    // num == entry.getNum() 棰勬湡涓嶅懡涓璫ache锛屾湁6鏉℃暟鎹�
 //    result = dbService.process(content);
 //    response = objectMapper.readValue(result, new TypeReference<MockResponse<SelectResponse>>() {});
 //    select = response.getResult();
@@ -398,7 +422,7 @@ public class DBServiceTest {
 //        Stream.of("field1", "field2", "field3").collect(Collectors.toSet()));
 //    assertEquals(6, select.getData().size());
 //
-//    // num > entry.getNum()，预期命中，5条数据
+//    // num > entry.getNum()锛岄鏈熷懡涓紝5鏉℃暟鎹�
 //    entry.setNum(99);
 //    result = dbService.process(content);
 //    response = objectMapper.readValue(result, new TypeReference<MockResponse<SelectResponse>>() {});
@@ -420,7 +444,7 @@ public class DBServiceTest {
 //
 //    List<TableData> datas = new ArrayList<TableData>();
 //
-//    // 第一个表写入
+//    // 绗竴涓〃鍐欏叆
 //    TableData data = new TableData();
 //    data.setTable("t_test_cache");
 //
@@ -447,7 +471,7 @@ public class DBServiceTest {
 //    data.setEntries(entries);
 //    datas.add(data);
 //
-//    // 第二个表写入
+//    // 绗簩涓〃鍐欏叆
 //    entries = new ArrayList<Entry>();
 //    entry = new Entry();
 //    entry.setKey("key_field");
@@ -474,7 +498,7 @@ public class DBServiceTest {
 //    data.setTable("t_test");
 //    datas.add(data);
 //
-//    // 第三个表写入
+//    // 绗笁涓〃鍐欏叆
 //    entries = new ArrayList<Entry>();
 //    entry = new Entry();
 //    entry.setKey("key_field");
@@ -515,7 +539,7 @@ public class DBServiceTest {
 //    CommitResponse commit = response.getResult();
 //    assertEquals(new Integer(1), commit.getCount());
 //
-//    // 检查cache
+//    // 妫�鏌ache
 //    Map<String, Table> tables = dbService.getTables();
 //    Table table = tables.get("t_test_cache");
 //    Cache cache = table.getCache();
