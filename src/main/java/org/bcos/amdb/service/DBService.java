@@ -413,7 +413,7 @@ public class DBService {
 	sql.append("CREATE TABLE IF NOT EXISTS ").append("`").append(table_name).append("`").append("(\n")
 		.append(" `_id_` int unsigned auto_increment,\n").append(" `_hash_` varchar(128) not null,\n")
 		.append("  `_num_` int not null,\n").append("`_status_` int not null,\n").append("`").append(key)
-		.append("`").append(" varchar(128) default '',\n");
+		.append("`").append(" varchar(255) default '',\n");
 	if (!"".equals(values[0].trim())) {
 	    for (String value : values) {
 		sql.append(" `").append(getStrSql(value)).append("` text,\n");
