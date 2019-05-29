@@ -250,8 +250,13 @@ public class DBService {
 	List<Map<String, Object>> data = null;
 	logger.debug("key:{} table:{} number:{} index{}  key_value:{} condition:{}", key, table, num,
 		info.indicesEqualString(), info.getKey(), conditionsql);
-
-	data = dataMapper.queryData(table, num, info.indicesEqualString(), info.getKey(), key, conditionsql);
+		
+	StringBuilder _table = new StringBuilder();
+	_table.append("`");
+	_table.append(table);
+	_table.append("`");
+	
+	data = dataMapper.queryData(_table.toString(), num, info.indicesEqualString(), info.getKey(), key, conditionsql);
 
 	if (!data.isEmpty()) {
 	    logger.debug("condition sql:{} has data", conditionsql);
@@ -351,9 +356,15 @@ public class DBService {
 			_fields = sbFields.toString();
 		    }
 		}
-
+		
+		
+		StringBuilder table = new StringBuilder();
+		table.append("`");
+		table.append(_table);
+		table.append("`");
+		
 		if (_table != null && _fields != null && list.size() > 0) {
-		    dataMapper.commitData(getStrSql(_table), _fields, list);
+		    dataMapper.commitData(table.toString(), _fields, list);
 			}
 	    }
 	    dataMapper.commit();
