@@ -49,6 +49,8 @@ public interface DataMapper {
 	
 	public void setMaxAllowedPacket();
 	
+	public	void setSqlMode();
+	
 	public void beginTransaction();
 	
 	public	void commit();
