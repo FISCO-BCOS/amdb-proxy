@@ -353,8 +353,7 @@ public class DBService {
 		}
 
 		if (_table != null && _fields != null && list.size() > 0) {
-
-		    dataMapper.commitData(_table, _fields, list);
+		    dataMapper.commitData(getStrSql(_table), _fields, list);
 			}
 	    }
 	    dataMapper.commit();
