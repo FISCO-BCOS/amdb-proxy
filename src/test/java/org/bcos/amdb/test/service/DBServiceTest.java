@@ -269,6 +269,12 @@ public class DBServiceTest {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void setSqlMode() {
+		// TODO Auto-generated method stub
+		
+	}
     
     
   }

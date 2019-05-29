@@ -62,6 +62,7 @@ public class DBService {
 	    dataMapper.insertSysTables();
 	    // add by darrenyin
 	    dataMapper.setMaxAllowedPacket();
+	    dataMapper.setSqlMode();
 	    dataMapper.createSysConsensus();
 	    dataMapper.createAccessTables();
 	    dataMapper.createCurrentStateTables();
