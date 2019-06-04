@@ -1,3 +1,10 @@
+### v2.0.1
+(2019-05-29)
+**修复**
+
+* 修复异常场景下数据库提交无法保证事务性的问题。
+
+
 ### v2.0.0
 
 (2019-04-25)
@@ -14,9 +21,3 @@
 1. Provide CRUD database interface
 2. Support transactions and connection pool.
 3. Support encrypted connections between AMDB service and FISCO-BCOS nodes (since 2.0.0-rc2).
-
-
-(2019-05-29)
-**修复**
-
-* 修复异常场景下数据库提交无法保证事务性的问题。
