@@ -29,6 +29,30 @@
 	        </foreach>
     </insert>
     
+    
+    <update id="setMaxAllowedPacket" >
+    	set global max_allowed_packet = 1073741824;
+	</update>
+	
+	
+	<update id="beginTransaction" >
+    	 START TRANSACTION;
+	</update>
+	
+	<update id="commit" >
+    	COMMIT;
+	</update>
+	
+	<update id="rollback" >
+    	ROLLBACK;
+	</update>
+	
+	
+	<update id="setSqlMode" >
+    	SET GLOBAL sql_mode = 'STRICT_TRANS_TABLES';
+	</update>
+	
+    
     <update id="createSysTables" >
 		CREATE TABLE IF NOT EXISTS `_sys_tables_` (
 		  `_id_`  int unsigned auto_increment,
@@ -80,7 +104,7 @@
 		  `_num_` int(11),
 		  `_status_` int(11),
 		  `key` varchar(128),
-		  `value` MEDIUMTEXT,
+		  `value` longtext,
 		  PRIMARY KEY (`_id_`),
 		  KEY (`key`)
 		) engine=innodb default charset=utf8mb4; 
@@ -94,7 +118,7 @@
 		  `_num_` int(11),
 		  `_status_` int(11),
 		  `number` varchar(128),
-		  `value` MEDIUMTEXT,
+		  `value` longtext,
 		  PRIMARY KEY (`_id_`),
 		  KEY (number)
 		) engine=innodb default charset=utf8mb4; 
@@ -107,7 +131,7 @@
 		  `_num_` int(11),
 		  `_status_` int(11),
 		  `hash` varchar(128),
-		  `value` MEDIUMTEXT,
+		  `value` longtext,
 		  `index` varchar(256),
 		  PRIMARY KEY (`_id_`),
 		  KEY (hash)
@@ -136,7 +160,7 @@
 		  `name` varchar(128),
 		  `version` varchar(128),
 		  `address` varchar(256),
-		  `abi` MEDIUMTEXT,
+		  `abi` longtext,
 		  PRIMARY KEY (`_id_`),
 		  KEY (name)
 		) engine=innodb default charset=utf8mb4; 
@@ -149,7 +173,7 @@
 		  `_num_` int(11),
 		  `_status_` int(11),
 		  `key` varchar(128),
-		  `value` MEDIUMTEXT,
+		  `value` longtext,
 		  `enable_num` varchar(256),
 		  PRIMARY KEY (`_id_`),
 		  KEY (`key`)
@@ -163,7 +187,7 @@
 		  `_num_` int(11),
 		  `_status_` int(11),
 		  `number` varchar(128),
-		  `value` MEDIUMTEXT,
+		  `value` longtext,
 		  PRIMARY KEY (`_id_`),
 		  KEY (number)
 		) engine=innodb default charset=utf8mb4; 

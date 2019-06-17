@@ -12,13 +12,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.apache.commons.text.StringEscapeUtils;
+import org.apache.ibatis.session.SqlSession;
 import org.bcos.amdb.cache.Cache;
 import org.bcos.amdb.cache.MemoryCache;
 import org.bcos.amdb.dao.DataMapper;
@@ -33,8 +40,15 @@ import org.bcos.amdb.dto.InfoResponse;
 import org.bcos.amdb.dto.SelectRequest;
 import org.bcos.amdb.dto.SelectResponse;
 import org.bcos.amdb.dto.TableData;
+import org.mybatis.spring.SqlSessionUtils;
 import org.bcos.amdb.dto.Request;
 import org.bcos.amdb.dto.Response;
+
+import org.springframework.transaction.support.TransactionTemplate;
+
+
+
+
 
 public class DBService {
 
@@ -47,6 +61,8 @@ public class DBService {
 	    dataMapper.createSysTables();
 	    dataMapper.insertSysTables();
 	    // add by darrenyin
+	    dataMapper.setMaxAllowedPacket();
+	    dataMapper.setSqlMode();
 	    dataMapper.createSysConsensus();
 	    dataMapper.createAccessTables();
 	    dataMapper.createCurrentStateTables();
@@ -62,7 +78,9 @@ public class DBService {
 	}
 	logger.info("Create table successful!");
     }
-
+    
+    
+    @Transactional(transactionManager = "transactionManager")
     public String process(String content) throws JsonProcessingException {
 
 	Response response = new Response();
@@ -232,8 +250,13 @@ public class DBService {
 	List<Map<String, Object>> data = null;
 	logger.debug("key:{} table:{} number:{} index{}  key_value:{} condition:{}", key, table, num,
 		info.indicesEqualString(), info.getKey(), conditionsql);
-
-	data = dataMapper.queryData(table, num, info.indicesEqualString(), info.getKey(), key, conditionsql);
+		
+	StringBuilder _table = new StringBuilder();
+	_table.append("`");
+	_table.append(table);
+	_table.append("`");
+	
+	data = dataMapper.queryData(_table.toString(), num, info.indicesEqualString(), info.getKey(), key, conditionsql);
 
 	if (!data.isEmpty()) {
 	    logger.debug("condition sql:{} has data", conditionsql);
@@ -289,11 +312,12 @@ public class DBService {
 	}
     }
 
-    @Transactional
-    public Map<Table, List<String>> DBReplace(String hash, Integer num, List<TableData> data) throws Exception {
+   @Transactional
+   public Map<Table, List<String>> DBReplace(String hash, Integer num, List<TableData> data) throws Exception {
 	try {
+		
+		dataMapper.beginTransaction();
 	    Map<Table, List<String>> updateKeys = new HashMap<Table, List<String>>();
-
 	    for (TableData tableData : data) {
 		List<BatchCommitRequest> list = new ArrayList<>();
 		String _table = null;
@@ -332,20 +356,29 @@ public class DBService {
 			_fields = sbFields.toString();
 		    }
 		}
-
+		
+		
+		StringBuilder table = new StringBuilder();
+		table.append("`");
+		table.append(_table);
+		table.append("`");
+		
 		if (_table != null && _fields != null && list.size() > 0) {
-
-		    dataMapper.commitData(_table, _fields, list);
-		}
+		    dataMapper.commitData(table.toString(), _fields, list);
+			}
 	    }
-
+	    dataMapper.commit();
+	    
 	    return updateKeys;
-	} catch (Exception e) {
-	    logger.error("Error while commit data ", e);
-	    throw e;
+		} catch (Exception e) {
+		    logger.error("Error while commit data ", e);
+		    //throw e;
+		    dataMapper.rollback();
+		    
+		    throw new RuntimeException(e.getMessage());
+		}
 	}
-    }
-
+   
     private Table getTable(String table_name) {
 	List<Map<String, String>> fields = dataMapper.getTable(table_name);
 	Table table = null;
@@ -391,7 +424,7 @@ public class DBService {
 	sql.append("CREATE TABLE IF NOT EXISTS ").append("`").append(table_name).append("`").append("(\n")
 		.append(" `_id_` int unsigned auto_increment,\n").append(" `_hash_` varchar(128) not null,\n")
 		.append("  `_num_` int not null,\n").append("`_status_` int not null,\n").append("`").append(key)
-		.append("`").append(" varchar(128) default '',\n");
+		.append("`").append(" varchar(255) default '',\n");
 	if (!"".equals(values[0].trim())) {
 	    for (String value : values) {
 		sql.append(" `").append(getStrSql(value)).append("` text,\n");
