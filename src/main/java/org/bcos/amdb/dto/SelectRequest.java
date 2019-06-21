@@ -1,10 +1,22 @@
 package org.bcos.amdb.dto;
 
+import java.util.List;
+
 public class SelectRequest {
+	
 	private String blockHash;
 	private Integer num;
 	private String table;
 	private String key;
+	private List<List<String>>	condition;
+	
+	public List<List<String>> getCondition() {
+		return condition;
+	}
+
+	public void setCondition(List<List<String>> condition) {
+		this.condition = condition;
+	}
 
 	public String getBlockHash() {
 		return blockHash;
@@ -37,4 +49,5 @@ public class SelectRequest {
 	public void setKey(String key) {
 		this.key = key;
 	}
+
 }

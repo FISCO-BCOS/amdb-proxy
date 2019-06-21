@@ -13,7 +13,8 @@ public interface DataMapper {
 			@Param("num")Integer num,
 			@Param("indices_equal")String indices_equal,
 			@Param("key_field")String keyField,
-			@Param("key_value")String keyValue) throws DataAccessException;
+			@Param("key_value")String keyValue,
+			@Param("query_condition")String QueryCondition) throws DataAccessException;
 	
 	
 	public void commitData(@Param("table")String table,
@@ -28,6 +29,32 @@ public interface DataMapper {
 	
 	public void insertSysTables();
 	
-	public void createSysMiners();
+	public void createSysConsensus();
+	
+	public void createAccessTables();
+	
+	public void createCurrentStateTables();
+	
+	public void createNumber2HashTables();
+	
+	public void createTxHash2BlockTables();
+	
+	public void createHash2BlockTables();
+	
+	public void createCnsTables();
+	
+	public void createSysConfigTables();
+	
+	public void createSysBlock2NoncesTables();
+	
+	public void setMaxAllowedPacket();
+	
+	public	void setSqlMode();
+	
+	public void beginTransaction();
+	
+	public	void commit();
+	
+	public	void rollback();
 	
 }
