@@ -20,7 +20,7 @@ AMDB has following advantages:
 
 ## Usage
 
-- You can download source code from git and compile manually to use amdb. See [amdb manual](https://fisco-bcos-documentation.readthedocs.io/zh_CN/latest/docs/manual/amdbconfig.html) for more details.
+- You can download source code from git and compile manually to use amdb. See [amdb manual](https://fisco-bcos-documentation.readthedocs.io/zh_CN/latest/docs/manual/distributed_storage.html) for more details.
 
 ## Source Installation
 ```bash
@@ -30,7 +30,7 @@ cd AMDB;gradle build
 If you install successfully, it produces the `dist` directory.
 
 ## Configuration
-Please see the [documentation](https://fisco-bcos-documentation.readthedocs.io/zh_CN/latest/docs/manual/amdbconfig.html) about configurating for the amdb.
+Please see the [documentation](https://fisco-bcos-documentation.readthedocs.io/zh_CN/latest/docs/manual/distributed_storage.html) about configurating for the amdb.
 
 ## Developing & Contributing
 - Star our Github.
