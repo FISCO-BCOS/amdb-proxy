@@ -29,6 +29,7 @@ cd AMDB;gradle build
 安装成功后，将在当前目录生成一个dist目录。
 
 ## Configuration
+
 amdb配置请参考[amdb使用指南](https://fisco-bcos-documentation.readthedocs.io/zh_CN/latest/docs/manual/distributed_storage.html)
 
 ## 贡献代码
