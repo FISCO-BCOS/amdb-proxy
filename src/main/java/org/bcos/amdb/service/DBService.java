@@ -427,7 +427,7 @@ public class DBService {
 		.append("`").append(" varchar(255) default '',\n");
 	if (!"".equals(values[0].trim())) {
 	    for (String value : values) {
-		sql.append(" `").append(getStrSql(value)).append("` text,\n");
+		sql.append(" `").append(getStrSql(value)).append("` mediumtext,\n");
 	    }
 	}
 	sql.append(" PRIMARY KEY( `_id_` ),\n").append(" KEY(`").append(key).append("`),\n").append(" KEY(`_num_`)\n")
