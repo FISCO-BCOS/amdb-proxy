@@ -19,7 +19,7 @@ AMDB 2.0版本中新增了对分布式数据存储的支持，克服了本地化
 
 ## 使用
 
-- 可以直接下载源码包并手动编译，具体请参考[amdb使用指南](https://fisco-bcos-documentation.readthedocs.io/zh_CN/latest/docs/manual/amdbconfig.html)
+- 可以直接下载源码包并手动编译，具体请参考[amdb使用指南](https://fisco-bcos-documentation.readthedocs.io/zh_CN/latest/docs/manual/distributed_storage.html)
 
 ## 源码安装
 ```bash
@@ -29,7 +29,8 @@ cd AMDB;gradle build
 安装成功后，将在当前目录生成一个dist目录。
 
 ## Configuration
-amdb配置请参考[amdb使用指南](https://fisco-bcos-documentation.readthedocs.io/zh_CN/latest/docs/manual/amdbconfig.html)
+
+amdb配置请参考[amdb使用指南](https://fisco-bcos-documentation.readthedocs.io/zh_CN/latest/docs/manual/distributed_storage.html)
 
 ## 贡献代码
 - 点亮我们的小星星(点击项目左上方Star按钮).
