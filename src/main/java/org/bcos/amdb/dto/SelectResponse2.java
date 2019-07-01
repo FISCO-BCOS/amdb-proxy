@@ -13,4 +13,5 @@ public class SelectResponse2 {
 	public void setColumnValue(List<Map<String, Object>> columnValue) {
 		this.columnValue = columnValue;
 	}
+
 }
