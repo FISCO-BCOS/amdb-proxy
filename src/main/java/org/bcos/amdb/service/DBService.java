@@ -377,7 +377,7 @@ public class DBService {
 		}
 	}
 
-	Map<String, List<BatchCommitRequest>> getCommitFieldNameAndValue(String hash, Integer num, TableData tableData) {
+	private Map<String, List<BatchCommitRequest>> getCommitFieldNameAndValue(String hash, Integer num, TableData tableData) {
 		Map<String, List<BatchCommitRequest>> datalist = new HashMap<String, List<BatchCommitRequest>>();
 		int index = 0;
 		Map<Set<String>, List<Integer>> setlist = new HashMap<Set<String>, List<Integer>>();
