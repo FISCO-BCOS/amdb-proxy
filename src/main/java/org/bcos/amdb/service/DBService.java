@@ -8,6 +8,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,8 @@ import org.springframework.transaction.support.TransactionTemplate;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import jnr.ffi.Struct.int32_t;
 
 import org.apache.commons.text.StringEscapeUtils;
 import org.apache.ibatis.session.SqlSession;
@@ -285,8 +289,6 @@ public class DBService {
 				List<Object> values = new ArrayList<Object>();
 				for (String field : line.keySet()) {
 					values.add(line.get(field));
-					logger.debug("key field:{} value:{}", field,line.get(field));
-					
 				}
 				allValues.add(values);
 			}
@@ -334,12 +336,12 @@ public class DBService {
 				}
 				allValues.add(map);
 			}
-			response.setColumn_value(allValues);
+			response.setColumnValue(allValues);
 
 		} else {
 			logger.debug("condition sql:{} has no data", conditionsql);
 			List<Map<String, Object>> allValues = new ArrayList<Map<String, Object>>();
-			response.setColumn_value(allValues);
+			response.setColumnValue(allValues);
 		}
 		return response;
 	}
@@ -377,6 +379,76 @@ public class DBService {
 		}
 	}
 
+	Map<String, List<BatchCommitRequest>> GetCommitFieldNameAndValue(String hash, Integer num, TableData tableData) {
+		Map<String, List<BatchCommitRequest>> datalist = new HashMap<String, List<BatchCommitRequest>>();
+		int index = 0;
+		Map<Set<String>, List<Integer>> setlist = new HashMap<Set<String>, List<Integer>>();
+		for (Map<String, String> entry : tableData.getEntries()) {
+			Set<String> fieldSet = new HashSet<String>();
+			for (Map.Entry<String, String> line : entry.entrySet()) {
+				logger.debug("getkey:{} getvalue:{}",line.getKey(), line.getValue());
+				if (line.getKey().equals("_num_") || line.getKey().equals("_hash_")) {
+					continue;
+				}
+				fieldSet.add(line.getKey());
+			}
+			
+			if(setlist.get(fieldSet) == null)
+			{
+				List<Integer> indexlist = new ArrayList<Integer>();
+				indexlist.add(index);
+				setlist.put(fieldSet, indexlist);
+			}
+			else
+			{
+				setlist.get(fieldSet).add(index);
+			}
+			++index;
+		}
+		
+		Iterator<Map.Entry<Set<String>, List<Integer>>> entries = setlist.entrySet().iterator();
+		while (entries.hasNext()) {
+			List<BatchCommitRequest> list = new ArrayList<>();
+			String _fields = null;
+			Map.Entry<Set<String>, List<Integer>> entry = entries.next();
+			List<Integer> indexList = entry.getValue();
+			for (Integer loopindex : indexList) {
+				StringBuffer sbFields = new StringBuffer();
+				StringBuffer sbValues = new StringBuffer();
+				for (Map.Entry<String, String> line : tableData.getEntries().get(loopindex).entrySet()) {
+					
+					logger.debug("getkey:{} getvalue:{}",line.getKey(), line.getValue());
+					if (line.getKey().equals("_num_") || line.getKey().equals("_hash_")) {
+						continue;
+					}
+					sbFields.append("`");
+					sbFields.append(replaceString(line.getKey()));
+					sbFields.append("`,");
+
+					sbValues.append("'");
+					sbValues.append(replaceString(line.getValue()));
+					sbValues.append("',");
+				}
+
+				if (_fields == null) {
+					_fields = sbFields.toString();
+				}
+				
+				logger.debug("_fields:{}",_fields);
+
+				BatchCommitRequest batchCommitRequest = new BatchCommitRequest();
+				batchCommitRequest.setHash(hash);
+				batchCommitRequest.setNum(num);
+				batchCommitRequest.setValues(sbValues.toString());
+				list.add(batchCommitRequest);
+				logger.debug("values:{}",sbValues.toString());
+				
+			}
+			datalist.put(_fields, list);
+		}
+		return datalist;
+	}
+
 	@Transactional
 	public Map<Table, List<String>> DBReplace(String hash, Integer num, List<TableData> data) throws Exception {
 		try {
@@ -384,55 +456,26 @@ public class DBService {
 			dataMapper.beginTransaction();
 			Map<Table, List<String>> updateKeys = new HashMap<Table, List<String>>();
 			for (TableData tableData : data) {
-				List<BatchCommitRequest> list = new ArrayList<>();
-				String _table = null;
-				String _fields = null;
 
-				for (Map<String, String> entry : tableData.getEntries()) {
-					StringBuffer sbFields = new StringBuffer();
-					StringBuffer sbValues = new StringBuffer();
-
-					for (Map.Entry<String, String> line : entry.entrySet()) {
-						if (line.getKey().equals("_num_") || line.getKey().equals("_hash_")) {
-							continue;
-						}
-
-						sbFields.append("`");
-						sbFields.append(replaceString(line.getKey()));
-						sbFields.append("`,");
-
-						sbValues.append("'");
-						sbValues.append(replaceString(line.getValue()));
-						sbValues.append("',");
-					}
-
-					// batch data to be inserted into the list
-					BatchCommitRequest batchCommitRequest = new BatchCommitRequest();
-					batchCommitRequest.setHash(hash);
-					batchCommitRequest.setNum(num);
-					batchCommitRequest.setValues(sbValues.toString());
-					list.add(batchCommitRequest);
-
-					if (_table == null) {
-						_table = tableData.getTable();
-					}
-
-					if (_fields == null) {
-						_fields = sbFields.toString();
-					}
-				}
-
+				String _table = tableData.getTable();
 				StringBuilder table = new StringBuilder();
 				table.append("`");
 				table.append(_table);
 				table.append("`");
 
-				if (_table != null && _fields != null && list.size() > 0) {
-					dataMapper.commitData(table.toString(), _fields, list);
+				Map<String, List<BatchCommitRequest>> dataList = GetCommitFieldNameAndValue(hash, num, tableData);
+				Iterator<Map.Entry<String, List<BatchCommitRequest>>> entries = dataList.entrySet().iterator();
+				while (entries.hasNext())
+				{
+					Map.Entry<String, List<BatchCommitRequest>> entry = entries.next();
+					String _fields = entry.getKey();
+					List<BatchCommitRequest> list = entry.getValue();
+					if (_table != null && _fields != null && list.size() > 0) {
+						dataMapper.commitData(table.toString(), _fields, list);
+					}
 				}
 			}
 			dataMapper.commit();
-
 			return updateKeys;
 		} catch (Exception e) {
 			logger.error("Error while commit data ", e);
