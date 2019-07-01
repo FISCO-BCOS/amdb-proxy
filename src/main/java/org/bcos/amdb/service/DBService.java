@@ -26,8 +26,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import jnr.ffi.Struct.int32_t;
-
 import org.apache.commons.text.StringEscapeUtils;
 import org.apache.ibatis.session.SqlSession;
 import org.bcos.amdb.cache.Cache;
@@ -181,7 +179,7 @@ public class DBService {
 		return response;
 	}
 
-	public String GetSql(SelectRequest request) throws Exception {
+	public String getSql(SelectRequest request) throws Exception {
 		String key = request.getKey();
 		List<List<String>> condition = request.getCondition();
 		logger.debug("key:{} condition:{}", key, condition);
@@ -264,7 +262,7 @@ public class DBService {
 			SelectResponse response = new SelectResponse();
 			return response;
 		}
-		String conditionsql = GetSql(request);
+		String conditionsql = getSql(request);
 
 		SelectResponse response = new SelectResponse();
 		List<Map<String, Object>> data = null;
@@ -311,7 +309,7 @@ public class DBService {
 			SelectResponse2 response = new SelectResponse2();
 			return response;
 		}
-		String conditionsql = GetSql(request);
+		String conditionsql = getSql(request);
 
 		SelectResponse2 response = new SelectResponse2();
 		List<Map<String, Object>> data = null;
@@ -379,7 +377,7 @@ public class DBService {
 		}
 	}
 
-	Map<String, List<BatchCommitRequest>> GetCommitFieldNameAndValue(String hash, Integer num, TableData tableData) {
+	Map<String, List<BatchCommitRequest>> getCommitFieldNameAndValue(String hash, Integer num, TableData tableData) {
 		Map<String, List<BatchCommitRequest>> datalist = new HashMap<String, List<BatchCommitRequest>>();
 		int index = 0;
 		Map<Set<String>, List<Integer>> setlist = new HashMap<Set<String>, List<Integer>>();
@@ -463,7 +461,7 @@ public class DBService {
 				table.append(_table);
 				table.append("`");
 
-				Map<String, List<BatchCommitRequest>> dataList = GetCommitFieldNameAndValue(hash, num, tableData);
+				Map<String, List<BatchCommitRequest>> dataList = getCommitFieldNameAndValue(hash, num, tableData);
 				Iterator<Map.Entry<String, List<BatchCommitRequest>>> entries = dataList.entrySet().iterator();
 				while (entries.hasNext())
 				{
