@@ -179,7 +179,7 @@ public class DBService {
 		return response;
 	}
 
-	public String getSql(SelectRequest request) throws Exception {
+	public String getSqlForSelect(SelectRequest request) throws Exception {
 		String key = request.getKey();
 		List<List<String>> condition = request.getCondition();
 		logger.debug("key:{} condition:{}", key, condition);
@@ -262,7 +262,7 @@ public class DBService {
 			SelectResponse response = new SelectResponse();
 			return response;
 		}
-		String conditionsql = getSql(request);
+		String conditionsql = getSqlForSelect(request);
 
 		SelectResponse response = new SelectResponse();
 		List<Map<String, Object>> data = null;
@@ -309,7 +309,7 @@ public class DBService {
 			SelectResponse2 response = new SelectResponse2();
 			return response;
 		}
-		String conditionsql = getSql(request);
+		String conditionsql = getSqlForSelect(request);
 
 		SelectResponse2 response = new SelectResponse2();
 		List<Map<String, Object>> data = null;
