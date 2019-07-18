@@ -47,5 +47,3 @@ amdb配置请参考[amdb使用指南](https://fisco-bcos-documentation.readthedo
 - Twitter [![](https://img.shields.io/twitter/url/http/shields.io.svg?style=social&label=Follow@FiscoBcos)](https://twitter.com/FiscoBcos)
 
 - e-mail [![](https://img.shields.io/twitter/url/http/shields.io.svg?logo=Gmail&style=social&label=service@fisco.com.cn)](mailto:service@fisco.com.cn)
-
-
