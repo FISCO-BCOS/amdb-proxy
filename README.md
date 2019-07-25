@@ -1,8 +1,12 @@
 English / [中文](./README_CN.md)
 # AMDB
+
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 [![Build Status](https://travis-ci.org/FISCO-BCOS/amdb-proxy.svg?branch=master)](https://travis-ci.org/FISCO-BCOS/amdb-proxy)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/e76b787651514cccadd0a22a409e4dd0)](https://www.codacy.com/app/fisco/AMDB?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=FISCO-BCOS/AMDB&amp;utm_campaign=Badge_Grade)
+
+
+**It only supports** [FISCO BCOS version 2.0 or newer versions](https://fisco-bcos-documentation.readthedocs.io/en/latest/).
 
 In order to overcome the limitations of local storage in version 1.0,we add support for distributed storage system in version 2.0,which is called AMDB.
 AMDB has following advantages:
@@ -17,17 +21,17 @@ AMDB has following advantages:
 
 ## Usage
 
-- You can download source code from git and compile manually to use amdb. See [amdb manual](https://fisco-bcos-documentation.readthedocs.io/zh_CN/latest/docs/manual/distributed_storage.html) for more details.
+- You can download source code from git and compile manually to use amdb. See [amdb manual](https://fisco-bcos-documentation.readthedocs.io/en/latest/docs/manual/distributed_storage.html) for more details.
 
 ## Source Installation
 ```bash
-git clone https://github.com/FISCO-BCOS/AMDB.git
-cd AMDB && gradle build
+git clone https://github.com/FISCO-BCOS/amdb-proxy.git
+cd amdb-proxy && ./gradlew build
 ```
 If you install successfully, it produces the `dist` directory.
 
 ## Configuration
-Please see the [documentation](https://fisco-bcos-documentation.readthedocs.io/zh_CN/latest/docs/manual/distributed_storage.html) about configurating for the amdb.
+Please see the [documentation](https://fisco-bcos-documentation.readthedocs.io/en/latest/docs/manual/distributed_storage.html) about configurating for the amdb.
 
 ## Developing & Contributing
 - Star our Github.

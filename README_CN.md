@@ -1,11 +1,13 @@
 中文 / [English](./README.md)
+# AMDB
 
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 [![Build Status](https://travis-ci.org/FISCO-BCOS/amdb-proxy.svg?branch=master)](https://travis-ci.org/FISCO-BCOS/amdb-proxy)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/e76b787651514cccadd0a22a409e4dd0)](https://www.codacy.com/app/fisco/AMDB?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=FISCO-BCOS/AMDB&amp;utm_campaign=Badge_Grade)
 ---
 
-# AMDB
+**此版本只支持**[FISCO BCOS 2.0及以上版本](https://fisco-bcos-documentation.readthedocs.io/zh_CN/latest/)。
+
 AMDB 2.0版本中新增了对分布式数据存储的支持，克服了本地化数据存储的诸多限制，和1.0版本相比有如下优势：
 - 支持多种存储引擎，选用高可用的分布式存储系统，可以支持数据简便快速地扩容；
 - 将计算和数据隔离，节点故障不会导致数据异常；
@@ -22,8 +24,8 @@ AMDB 2.0版本中新增了对分布式数据存储的支持，克服了本地化
 
 ## 源码安装
 ```bash
-git clone https://github.com/FISCO-BCOS/AMDB.git
-cd AMDB;gradle build
+git clone https://github.com/FISCO-BCOS/amdb-proxy.git
+cd amdb-proxy && ./gradlew build
 ```
 安装成功后，将在当前目录生成一个dist目录。
 
