@@ -36,7 +36,7 @@ dependencies {
    	runtime 'mysql:mysql-connector-java:5.1.30'
    	compile 'org.mybatis:mybatis:3.2.8'
    	runtime 'org.mybatis:mybatis:3.2.8'
-   	compile 'org.mybatis:mybatis-spring:1.2.2'
+   	compile 'org.mybatis:mybatis-spring:2.0.2'
    	runtime 'org.mybatis:mybatis-spring:1.2.2'
    	compile 'org.apache.commons:commons-text:1.2'
    	runtime 'org.apache.commons:commons-text:1.2'
