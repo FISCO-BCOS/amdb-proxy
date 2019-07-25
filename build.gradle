@@ -59,7 +59,7 @@ dependencies {
    	compile 'org.fisco-bcos:web3sdk:2.0.3'
    	runtime 'org.fisco-bcos:web3sdk:2.0.3'
    	
-   	compile 'org.springframework:spring-jdbc:4.3.18.RELEASE'
+   	compile 'org.springframework:spring-jdbc:5.1.8.RELEASE'
    	runtime 'org.springframework:spring-jdbc:4.3.18.RELEASE'
 }
 
