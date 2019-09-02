@@ -45,16 +45,7 @@
 					<property name="groupId" value="1" />
 					<property name="connectionsStr">
 						<list>
-							<value>127.0.0.1:20700</value>
-						</list>
-					</property>
-				</bean>
-				<bean id="group2"  class="org.fisco.bcos.channel.handler.ChannelConnections">
-					<property name="groupId" value="2" />
-					<property name="connectionsStr">
-						<list>
-							<value>127.0.0.1:20602</value>
-							<value>127.0.0.1:20603</value>
+							<value>127.0.0.1:20200</value>
 						</list>
 					</property>
 				</bean>
@@ -71,6 +62,7 @@
 		<!-- communication topic configuration of the node -->
 		<property name="topics">
 			<list>
+				<!-- please configure the topic name here-->
 				<value>${node.topic}</value>
 			</list>
 		</property>
@@ -89,6 +81,7 @@
 	<!-- database connection configuration -->
 	 <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<!-- please configure db connection here-->
 		<property name="url" value="jdbc:mysql://${db.ip}:${db.port}/${db.database}?characterEncoding=UTF-8&amp;zeroDateTimeBehavior=convertToNull" />
 		<property name="username" value="${db.user}" />
 		<property name="password" value="${db.password}" />
