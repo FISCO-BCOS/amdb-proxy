@@ -19,6 +19,8 @@
 	<context:annotation-config />
 	<context:component-scan base-package="org.bcos" />	
 	<!-- database and amdb node properties configuration-->
+	<!-- db.properties amdb.properties not needed -->
+	<!-- 
 	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">  
         <property name="locations">  
            <list>  
@@ -27,6 +29,7 @@
             </list>  
         </property>  
     </bean> 
+	 -->
 
 	<!-- mybatis configuration -->
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
