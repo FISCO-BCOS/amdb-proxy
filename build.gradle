@@ -56,8 +56,8 @@ dependencies {
    	compile 'org.ethereum:solcJ-all:0.4.25'
    	runtime 'org.ethereum:solcJ-all:0.4.25'
    	
-   	compile 'org.fisco-bcos:web3sdk:2.0.3'
-   	runtime 'org.fisco-bcos:web3sdk:2.0.3'
+   	compile 'org.fisco-bcos:web3sdk:2.1.0.03-SNAPSHOT'
+   	runtime 'org.fisco-bcos:web3sdk:2.1.0.03-SNAPSHOT'
    	
    	compile 'org.springframework:spring-jdbc:4.3.18.RELEASE'
    	runtime 'org.springframework:spring-jdbc:4.3.18.RELEASE'
