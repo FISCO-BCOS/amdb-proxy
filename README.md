@@ -17,7 +17,7 @@ AMDB has following advantages:
 - The storage of world state is also changed from MPT to distributed storage,which  avoids the problem of performance degradation caused by rapid expansion of world state.
 - It optimizes the structure of data storage,saves storage space and has higher access efficiency.
 
-![Architecture](https://fisco-bcos-documentation.readthedocs.io/zh_CN/release-2.0/_images/logic_archite.png) 
+![Architecture](https://fisco-bcos-documentation.readthedocs.io/zh_CN/latest/_images/logic_archite.png) 
 
 ## Usage
 
