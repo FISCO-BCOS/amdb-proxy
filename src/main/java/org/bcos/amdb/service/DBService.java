@@ -14,28 +14,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionDefinition;
-import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
-import org.springframework.transaction.support.TransactionTemplate;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import org.apache.commons.text.StringEscapeUtils;
-import org.apache.ibatis.session.SqlSession;
-import org.bcos.amdb.cache.Cache;
 import org.bcos.amdb.cache.MemoryCache;
 import org.bcos.amdb.dao.DataMapper;
 import org.bcos.amdb.dto.BatchCommitRequest;
 import org.bcos.amdb.dto.CommitRequest;
 import org.bcos.amdb.dto.CommitResponse;
 import org.bcos.amdb.dto.Condition;
-import org.bcos.amdb.dto.Entry;
 import org.bcos.amdb.dto.Header;
 import org.bcos.amdb.dto.InfoRequest;
 import org.bcos.amdb.dto.InfoResponse;
@@ -43,11 +31,8 @@ import org.bcos.amdb.dto.SelectRequest;
 import org.bcos.amdb.dto.SelectResponse;
 import org.bcos.amdb.dto.SelectResponse2;
 import org.bcos.amdb.dto.TableData;
-import org.mybatis.spring.SqlSessionUtils;
 import org.bcos.amdb.dto.Request;
 import org.bcos.amdb.dto.Response;
-
-import org.springframework.transaction.support.TransactionTemplate;
 
 public class DBService {
 
@@ -204,42 +189,43 @@ public class DBService {
 			Map.Entry<String, Condition> entry = entries.next();
 			logger.debug("key:{}", entry.getKey());
 			Condition value = entry.getValue();
-
-			String strKeyEscape = StringEscapeUtils.escapeJava(entry.getKey());
+			
+			
+			String strKeyEscape = getStrSql(entry.getKey());
 
 			if (value.getOp() == org.bcos.amdb.dto.Condition.ConditionOp.eq) {
 				sb.append(" and `").append(strKeyEscape).append("` = ");
-				sb.append("'").append(StringEscapeUtils.escapeJava(value.getValue()));
+				sb.append("'").append(getStrSql(value.getValue()));
 				sb.append("'");
 			}
 
 			else if (value.getOp() == org.bcos.amdb.dto.Condition.ConditionOp.ne) {
 				sb.append(" and `").append(strKeyEscape).append("` != ");
-				sb.append("'").append(StringEscapeUtils.escapeJava(value.getValue()));
+				sb.append("'").append(getStrSql(value.getValue()));
 				sb.append("'");
 			}
 
 			else if (value.getOp() == org.bcos.amdb.dto.Condition.ConditionOp.gt) {
 				sb.append(" and `").append(strKeyEscape).append("` > ");
-				sb.append("'").append(StringEscapeUtils.escapeJava(value.getValue()));
+				sb.append("'").append(getStrSql(value.getValue()));
 				sb.append("'");
 			}
 
 			else if (value.getOp() == org.bcos.amdb.dto.Condition.ConditionOp.ge) {
 				sb.append(" and `").append(strKeyEscape).append("` >= ");
-				sb.append("'").append(StringEscapeUtils.escapeJava(value.getValue()));
+				sb.append("'").append(getStrSql(value.getValue()));
 				sb.append("'");
 			}
 
 			else if (value.getOp() == org.bcos.amdb.dto.Condition.ConditionOp.lt) {
 				sb.append(" and `").append(strKeyEscape).append("` < ");
-				sb.append("'").append(StringEscapeUtils.escapeJava(value.getValue()));
+				sb.append("'").append(getStrSql(value.getValue()));
 				sb.append("'");
 			}
 
 			else if (value.getOp() == org.bcos.amdb.dto.Condition.ConditionOp.le) {
 				sb.append(" and `").append(strKeyEscape).append("` <=");
-				sb.append("'").append(StringEscapeUtils.escapeJava(value.getValue()));
+				sb.append("'").append(getStrSql(value.getValue()));
 				sb.append("'");
 			} else {
 				logger.error("error condition op:{}", value.getOp());
@@ -535,7 +521,7 @@ public class DBService {
 				sql.append(" `").append(getStrSql(value)).append("` mediumtext,\n");
 			}
 		}
-		sql.append(" PRIMARY KEY( `_id_` ),\n").append(" KEY(`").append(key).append("`),\n").append(" KEY(`_num_`)\n")
+		sql.append(" PRIMARY KEY( `_id_` ),\n").append(" KEY(`").append(key).append("`(191)),\n").append(" KEY(`_num_`)\n")
 				.append(")ENGINE=InnoDB default charset=utf8mb4;");
 		return sql.toString();
 	}

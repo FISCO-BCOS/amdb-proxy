@@ -16,7 +16,7 @@ AMDB 2.0版本中新增了对分布式数据存储的支持，克服了本地化
 - 世界状态的存储也从原来的MPT存储结构转为分布式存储，避免了世界状态急剧膨胀导致性能下降的问题；
 - 优化了数据存储的结构，更节约存储空间，存取效率更高。
 
-![逻辑架构图](https://fisco-bcos-documentation.readthedocs.io/zh_CN/release-2.0/_images/logic_archite.png) 
+![逻辑架构图](https://fisco-bcos-documentation.readthedocs.io/zh_CN/latest/_images/logic_archite.png) 
 
 ## 使用
 
