@@ -275,6 +275,33 @@ public class DBServiceTest {
 		// TODO Auto-generated method stub
 		
 	}
+
+    /* (non-Javadoc)
+     * @see org.bcos.amdb.dao.DataMapper#existTable(java.lang.String)
+     */
+    @Override
+    public int existTable(String tableName) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    /* (non-Javadoc)
+     * @see org.bcos.amdb.dao.DataMapper#getMaxBlock()
+     */
+    @Override
+    public int getMaxBlock() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    /* (non-Javadoc)
+     * @see org.bcos.amdb.dao.DataMapper#selectTableDataByNum(java.lang.String, java.lang.Integer)
+     */
+    @Override
+    public List<Map<String, Object>> selectTableDataByNum(String table_name, Integer num) {
+        // TODO Auto-generated method stub
+        return null;
+    }
     
     
   }

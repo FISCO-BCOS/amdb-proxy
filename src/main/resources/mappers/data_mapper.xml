@@ -12,6 +12,20 @@
 		${sql}
 	</update>
 	
+	<select id="existTable" parameterType="String" resultType="Integer">
+		select count(*)  from  _sys_tables_ where table_name=#{tableName}
+	</select>
+	
+	<select id="getMaxBlock" resultType="Integer">
+		select max(`_num_`) from _sys_hash_2_block_
+	</select>
+	
+	<select id="selectTableDataByNum" parameterType="java.lang.Long"
+		resultType="java.util.Map">
+		select * from ${tableName} where (_id_, _num_)  in
+		(select _id_, max(_num_) from ${tableName} where _num_ &lt;= #{num} group by _id_)
+	</select>
+	
 	<select id="queryData" resultType="map">
 		<!--  select * from ${table} where _num_ &lt; #{num} and ${key_field} = #{key_value} ${query_condition} -->
 		select * from ${table} where 1=1 ${query_condition}
