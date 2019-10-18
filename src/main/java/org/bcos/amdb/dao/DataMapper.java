@@ -63,5 +63,4 @@ public interface DataMapper {
     
     public List<Map<String, Object>> selectTableDataByNum(@Param("tableName")String table_name, @Param("num")Integer num);
     
-	
 }
