@@ -3,7 +3,7 @@ package org.bcos.amdb.constants;
 
 
 /**
- * ResponseConstants
+ * ResponseConstants.
  *
  * @Description: ResponseConstants
  * @author graysonzhang
