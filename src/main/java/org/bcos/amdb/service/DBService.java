@@ -122,7 +122,7 @@ public class DBService {
                     throw new Exception("the table " + params.getTableName() + " does not exist");
                 }else if(params.getNum() > dataMapper.getMaxBlock()){
                     response.setMessage(ResponseConstants.BLOCK_NUM_ERROR_MESSAGE);
-                    throw new Exception("block num " + params.getNum() + " greater than the max num in db");
+                    throw new Exception("block num:" + params.getNum() + " greater than the max num in db");
                 }else{
                     result = selectByNum(params);
                 }               
@@ -186,7 +186,11 @@ public class DBService {
         }else{
             tableName = getDetailTableName(request.getTableName());
         }
-        return dataMapper.selectTableDataByNum(tableName, request.getNum());
+        List<Map<String, Object>> resultMap = dataMapper.selectTableDataByNum(tableName, request.getNum());
+        for (Map<String, Object> map : resultMap) {
+            map.remove("pk_id");
+        }
+        return resultMap;
     }
 	
 	private String getDetailTableName(String tableName){
