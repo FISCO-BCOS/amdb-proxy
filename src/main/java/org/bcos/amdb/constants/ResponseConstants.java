@@ -11,12 +11,7 @@ package org.bcos.amdb.constants;
  *
  */
 public class ResponseConstants {
-    
-    /* response code **/
-    public static final int NO_TABLE = 1000;
-    public static final int BLOCK_NUM_ERROR = 1001;
-    
-    
+       
     /* response message **/
     public static final String NO_TABLE_MESSAGE = "this table does not exist";
     public static final String BLOCK_NUM_ERROR_MESSAGE = "block num > the max num in db";
