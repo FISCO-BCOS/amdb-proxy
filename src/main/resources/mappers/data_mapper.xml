@@ -21,9 +21,9 @@
 	</select>
 	
 	<select id="selectTableDataByNum" parameterType="java.lang.Long"
-		resultType="java.util.Map">
-		select * from ${tableName} where (_id_, _num_)  in
-		(select _id_, max(_num_) from ${tableName} where _num_ &lt;= #{num} group by _id_)
+		resultType="java.util.Map">		
+		select * from ${tableName} where (_id_, _num_)  in ( select _id_, num from (
+		select _id_, max(_num_) as num from ${tableName} where _num_ &lt;= #{num} group by _id_) as tmp)
 	</select>
 	
 	<select id="queryData" resultType="map">
