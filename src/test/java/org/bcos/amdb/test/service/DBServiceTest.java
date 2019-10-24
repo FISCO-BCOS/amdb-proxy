@@ -2,42 +2,26 @@ package org.bcos.amdb.test.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertLinesMatch;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mybatis.spring.SqlSessionFactoryBean;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
 import org.bcos.amdb.cache.Cache;
-import org.bcos.amdb.cache.CacheEntry;
-import org.bcos.amdb.cache.CacheValues;
 import org.bcos.amdb.cache.MemoryCache;
 import org.bcos.amdb.dao.DataMapper;
 import org.bcos.amdb.dto.BatchCommitRequest;
-import org.bcos.amdb.dto.CommitRequest;
-import org.bcos.amdb.dto.CommitResponse;
-import org.bcos.amdb.dto.Entry;
 import org.bcos.amdb.dto.InfoRequest;
 import org.bcos.amdb.dto.InfoResponse;
 import org.bcos.amdb.dto.Request;
 import org.bcos.amdb.dto.SelectRequest;
 import org.bcos.amdb.dto.SelectResponse;
-import org.bcos.amdb.dto.TableData;
 import org.bcos.amdb.service.DBService;
 import org.bcos.amdb.service.Table;
 
@@ -285,20 +269,14 @@ public class DBServiceTest {
         return 0;
     }
 
-    /* (non-Javadoc)
-     * @see org.bcos.amdb.dao.DataMapper#getMaxBlock()
-     */
     @Override
     public int getMaxBlock() {
         // TODO Auto-generated method stub
         return 0;
     }
 
-    /* (non-Javadoc)
-     * @see org.bcos.amdb.dao.DataMapper#selectTableDataByNum(java.lang.String, java.lang.Integer)
-     */
     @Override
-    public List<Map<String, Object>> selectTableDataByNum(String table_name, Integer num) {
+    public List<Map<String, Object>> selectTableDataByNum(String table_name, Integer num, int preIndex, int pageSize) {
         // TODO Auto-generated method stub
         return null;
     }
