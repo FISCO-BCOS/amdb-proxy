@@ -41,6 +41,8 @@ public class DBService {
 	private static Logger logger = LoggerFactory.getLogger(DBService.class);
 	private static final String SYSTABLE = "_sys_tables_";
 	private static final String DETAIL_TABLE_POST_FIX = "d_";
+	
+	private static final int PAGE_SIZE = 10000;
 
 	public void initTables() {
 		logger.info("Start create table:");
@@ -186,7 +188,21 @@ public class DBService {
         }else{
             tableName = getDetailTableName(request.getTableName());
         }
-        List<Map<String, Object>> resultMap = dataMapper.selectTableDataByNum(tableName, request.getNum());
+        
+        int preIndex = 0;
+        int pageCount = PAGE_SIZE;
+        List<Map<String, Object>> resultMap = new ArrayList<>();
+        while(pageCount == PAGE_SIZE){
+            List<Map<String, Object>> tempResult = dataMapper.selectTableDataByNum(tableName, request.getNum(), preIndex, PAGE_SIZE);
+            if(tempResult != null && tempResult.size() != 0){
+                preIndex = (int) tempResult.get(tempResult.size()-1).get("_id_");
+                resultMap.addAll(tempResult);
+                pageCount = tempResult.size();
+            }else{
+                pageCount = 0;
+            }    
+        }
+        
         for (Map<String, Object> map : resultMap) {
             map.remove("pk_id");
         }

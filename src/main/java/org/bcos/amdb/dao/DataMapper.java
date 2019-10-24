@@ -61,6 +61,6 @@ public interface DataMapper {
     
     public int getMaxBlock();
     
-    public List<Map<String, Object>> selectTableDataByNum(@Param("tableName")String table_name, @Param("num")Integer num);
+    public List<Map<String, Object>> selectTableDataByNum(@Param("tableName")String table_name, @Param("num")Integer num, @Param("preIndex")int preIndex, @Param("pageSize")int pageSize);
     
 }
