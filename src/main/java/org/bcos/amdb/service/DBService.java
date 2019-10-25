@@ -19,7 +19,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bcos.amdb.cache.MemoryCache;
-import org.bcos.amdb.constants.ResponseConstants;
 import org.bcos.amdb.dao.DataMapper;
 import org.bcos.amdb.dto.BatchCommitRequest;
 import org.bcos.amdb.dto.CommitRequest;
@@ -32,6 +31,8 @@ import org.bcos.amdb.dto.SelectRequest;
 import org.bcos.amdb.dto.SelectResponse;
 import org.bcos.amdb.dto.SelectResponse2;
 import org.bcos.amdb.dto.TableData;
+import org.bcos.amdb.enums.AmdbExceptionCodeEnums;
+import org.bcos.amdb.exception.AmdbException;
 import org.bcos.amdb.dto.Request;
 import org.bcos.amdb.dto.Response;
 import org.bcos.amdb.dto.SelectByNumRequest;
@@ -120,11 +121,9 @@ public class DBService {
                         });
                 SelectByNumRequest params = request.getParams();
                 if(dataMapper.existTable(params.getTableName()) != 1){
-                    response.setMessage(ResponseConstants.NO_TABLE_MESSAGE);
-                    throw new RuntimeException("the table " + params.getTableName() + " does not exist");
+                    throw new AmdbException(AmdbExceptionCodeEnums.NO_TABLE_MESSAGE);
                 }else if(params.getNum() > dataMapper.getMaxBlock()){
-                    response.setMessage(ResponseConstants.BLOCK_NUM_ERROR_MESSAGE);
-                    throw new RuntimeException("block num:" + params.getNum() + " greater than the max num in db");
+                    throw new AmdbException(AmdbExceptionCodeEnums.BLOCK_NUM_ERROR_MESSAGE);
                 }else{
                     result = selectByNum(params);
                 }               
