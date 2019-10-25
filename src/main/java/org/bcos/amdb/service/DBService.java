@@ -121,10 +121,10 @@ public class DBService {
                 SelectByNumRequest params = request.getParams();
                 if(dataMapper.existTable(params.getTableName()) != 1){
                     response.setMessage(ResponseConstants.NO_TABLE_MESSAGE);
-                    throw new Exception("the table " + params.getTableName() + " does not exist");
+                    throw new RuntimeException("the table " + params.getTableName() + " does not exist");
                 }else if(params.getNum() > dataMapper.getMaxBlock()){
                     response.setMessage(ResponseConstants.BLOCK_NUM_ERROR_MESSAGE);
-                    throw new Exception("block num:" + params.getNum() + " greater than the max num in db");
+                    throw new RuntimeException("block num:" + params.getNum() + " greater than the max num in db");
                 }else{
                     result = selectByNum(params);
                 }               
