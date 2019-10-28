@@ -73,6 +73,7 @@
             </list>
         </property>
         <property name="pushCallback" ref="DBHandler"/>
+        <property name="threadPool" ref="pool"/>
     </bean>
     
     <bean id="DBService" class="org.bcos.amdb.service.DBService" init-method="initTables">
@@ -85,11 +86,20 @@
     <tx:annotation-driven transaction-manager="transactionManager" />  
 
     <!-- database connection configuration -->
-     <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource">
+    <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource">
         <property name="driverClassName" value="com.mysql.jdbc.Driver" />
         <!-- please configure db connection here-->
         <property name="url" value="jdbc:mysql://${db.ip}:${db.port}/${db.database}?characterEncoding=UTF-8&amp;zeroDateTimeBehavior=convertToNull" />
         <property name="username" value="${db.user}" />
         <property name="password" value="${db.password}" />
     </bean>
+    <bean id="pool" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+        <property name="corePoolSize" value="50" />
+        <property name="maxPoolSize" value="100" />
+        <property name="queueCapacity" value="500" />
+        <property name="keepAliveSeconds" value="60" />
+        <property name="rejectedExecutionHandler">
+        <bean class="java.util.concurrent.ThreadPoolExecutor.AbortPolicy" />
+    </property>
+</bean>
 </beans>
