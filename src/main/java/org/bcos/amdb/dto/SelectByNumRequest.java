@@ -10,37 +10,34 @@ package org.bcos.amdb.dto;
  *
  */
 public class SelectByNumRequest {
-    
+	
+	private String tableName;
     private long num;
+    private long preIndex;
+    private int pageSize;
     
-    private String tableName;
-
-    /**
-     * @return the num
-     */
-    public long getNum() {
-        return num;
-    }
-
-    /**
-     * @param num the num to set
-     */
-    public void setNum(Integer num) {
-        this.num = num;
-    }
-
-    /**
-     * @return the tableName
-     */
-    public String getTableName() {
-        return tableName;
-    }
-
-    /**
-     * @param tableName the tableName to set
-     */
-    public void setTableName(String tableName) {
-        this.tableName = tableName;
-    }   
-
+	public String getTableName() {
+		return tableName;
+	}
+	public void setTableName(String tableName) {
+		this.tableName = tableName;
+	}
+	public long getNum() {
+		return num;
+	}
+	public void setNum(long num) {
+		this.num = num;
+	}
+	public long getPreIndex() {
+		return preIndex;
+	}
+	public void setPreIndex(long preIndex) {
+		this.preIndex = preIndex;
+	}
+	public int getPageSize() {
+		return pageSize;
+	}
+	public void setPageSize(int pageSize) {
+		this.pageSize = pageSize;
+	}   
 }
