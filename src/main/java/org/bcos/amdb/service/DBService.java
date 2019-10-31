@@ -43,6 +43,7 @@ public class DBService {
 	private static final String SYSTABLE = "_sys_tables_";
 	private static final String DETAIL_TABLE_POST_FIX = "d_";
 
+
 	public void initTables() {
 		logger.info("Start create table:");
 		try {
@@ -123,6 +124,7 @@ public class DBService {
                 }else if(params.getNum() > dataMapper.getMaxBlock()){
                     throw new AmdbException(AmdbExceptionCodeEnums.BLOCK_NUM_ERROR_MESSAGE);
                 }else{
+
                 	String tableName;
                     if(params.getTableName().equals(SYSTABLE)){
                         tableName = params.getTableName();
@@ -136,6 +138,7 @@ public class DBService {
     					}
                     }
                     result = tempResult;   
+
                 }               
             } else if (header.getOp().equals("commit")) {
 				Request<CommitRequest> request = objectMapper.readValue(content,
