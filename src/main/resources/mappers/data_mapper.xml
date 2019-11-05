@@ -69,22 +69,22 @@
     
     <update id="createSysTables" >
 		CREATE TABLE IF NOT EXISTS `_sys_tables_` (
-		  `_id_`  int unsigned auto_increment,
+		  `_id_`  bigint(10) unsigned auto_increment,
 		  `_hash_` varchar(128) default '',
-		  `_num_` int(11) default 0,
+		  `_num_` bigint(11) default '0',
 		   `_status_` int(11) default 0,
 		  `table_name` varchar(128) default '',
 		  `key_field` varchar(1024) default '',
 		  `value_field` varchar(1024) default '',
 		   PRIMARY KEY (`_id_`),
 		   UNIQUE KEY (table_name)
-		) ENGINE=InnoDB default charset=utf8mb4;
+		) ENGINE=InnoDB auto_increment=2 default charset=utf8mb4;
 	</update>
 	<update id="createSysConsensus" >
 		CREATE TABLE IF NOT EXISTS `_sys_consensus_` (
-		  `_id_`  int unsigned auto_increment,
+		  `_id_`  bigint(10) unsigned auto_increment,
 		  `_hash_` varchar(128),
-		  `_num_` int(11),
+		  `_num_` bigint(11) default '0',
 		  `_status_` int(11),
 		  `name` varchar(128) default 'node',
 		  `type` varchar(128),
@@ -99,9 +99,9 @@
 	
 	<update id="createAccessTables" >
 		CREATE TABLE IF NOT EXISTS `_sys_table_access_` (
-		  `_id_`  int unsigned auto_increment,
+		  `_id_`  bigint(10) unsigned auto_increment,
 		  `_hash_` varchar(128),
-		  `_num_` int(11),
+		  `_num_` bigint(11) default '0',
 		  `_status_` int(11),
 		  `table_name` varchar(128),
 		  `address` varchar(128),
@@ -113,9 +113,9 @@
 	
 	<update id="createCurrentStateTables" >
 		CREATE TABLE IF NOT EXISTS `_sys_current_state_` (
-		  `_id_`  int unsigned auto_increment,
+		  `_id_`  bigint(10) unsigned auto_increment,
 		  `_hash_` varchar(128),
-		  `_num_` int(11),
+		  `_num_` bigint(11) default '0',
 		  `_status_` int(11),
 		  `key` varchar(128),
 		  `value` longtext,
@@ -127,9 +127,9 @@
 	
 	<update id="createNumber2HashTables" >
 		CREATE TABLE IF NOT EXISTS `_sys_number_2_hash_` (
-		  `_id_`  int unsigned auto_increment,
+		  `_id_`  bigint(10) unsigned auto_increment,
 		  `_hash_` varchar(128),
-		  `_num_` int(11),
+		  `_num_` bigint(11) default '0',
 		  `_status_` int(11),
 		  `number` varchar(128),
 		  `value` longtext,
@@ -140,9 +140,9 @@
 	
 	<update id="createTxHash2BlockTables" >
 		CREATE TABLE IF NOT EXISTS `_sys_tx_hash_2_block_` (
-		  `_id_`  int unsigned auto_increment,
+		  `_id_`  bigint(10) unsigned auto_increment,
 		  `_hash_` varchar(128),
-		  `_num_` int(11),
+		  `_num_` bigint(11) default '0',
 		  `_status_` int(11),
 		  `hash` varchar(128),
 		  `value` longtext,
@@ -154,9 +154,9 @@
 	
 	<update id="createHash2BlockTables" >
 		CREATE TABLE IF NOT EXISTS `_sys_hash_2_block_` (
-		  `_id_`  int unsigned auto_increment,
+		  `_id_`  bigint(10) unsigned auto_increment,
 		  `_hash_` varchar(128),
-		  `_num_` int(11),
+		  `_num_` bigint(11) default '0',
 		  `_status_` int(11),
 		  `hash` varchar(128),
 		  `value` LONGTEXT,
@@ -167,9 +167,9 @@
 	
 	<update id="createCnsTables" >
 		CREATE TABLE IF NOT EXISTS `_sys_cns_` (
-		  `_id_`  int unsigned auto_increment,
+		  `_id_`  bigint(10) unsigned auto_increment,
 		  `_hash_` varchar(128),
-		  `_num_` int(11),
+		  `_num_` bigint(11) default '0',
 		  `_status_` int(11),
 		  `name` varchar(128),
 		  `version` varchar(128),
@@ -182,9 +182,9 @@
 	
 	<update id="createSysConfigTables" >
 		CREATE TABLE IF NOT EXISTS `_sys_config_` (
-		  `_id_`  int unsigned auto_increment,
+		  `_id_`  bigint(10) unsigned auto_increment,
 		  `_hash_` varchar(128),
-		  `_num_` int(11),
+		  `_num_` bigint(11) default '0',
 		  `_status_` int(11),
 		  `key` varchar(128),
 		  `value` longtext,
@@ -196,9 +196,9 @@
 	
 	<update id="createSysBlock2NoncesTables" >
 		CREATE TABLE IF NOT EXISTS `_sys_block_2_nonces_` (
-		  `_id_`  int unsigned auto_increment,
+		  `_id_`  bigint(10) unsigned auto_increment,
 		  `_hash_` varchar(128),
-		  `_num_` int(11),
+		  `_num_` bigint(11) default '0',
 		  `_status_` int(11),
 		  `number` varchar(128),
 		  `value` longtext,
