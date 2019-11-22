@@ -66,8 +66,8 @@
     	SET GLOBAL sql_mode = 'STRICT_TRANS_TABLES';
 	</update>
 	
-    
-    <update id="createSysTables" >
+    <!--  specify statementType in case DB doesn't support preparing DDL sqls -->
+    <update id="createSysTables" statementType="STATEMENT" >
 		CREATE TABLE IF NOT EXISTS `_sys_tables_` (
 		  `_id_`  bigint(10) unsigned auto_increment,
 		  `_hash_` varchar(128) default '',
@@ -80,7 +80,7 @@
 		   UNIQUE KEY (table_name)
 		) ENGINE=InnoDB auto_increment=2 default charset=utf8mb4;
 	</update>
-	<update id="createSysConsensus" >
+	<update id="createSysConsensus" statementType="STATEMENT" >
 		CREATE TABLE IF NOT EXISTS `_sys_consensus_` (
 		  `_id_`  bigint(10) unsigned auto_increment,
 		  `_hash_` varchar(128),
@@ -97,7 +97,7 @@
 	</update>
 	
 	
-	<update id="createAccessTables" >
+	<update id="createAccessTables" statementType="STATEMENT" >
 		CREATE TABLE IF NOT EXISTS `_sys_table_access_` (
 		  `_id_`  bigint(10) unsigned auto_increment,
 		  `_hash_` varchar(128),
@@ -111,7 +111,7 @@
 		) engine=innodb default charset=utf8mb4; 
 	</update>
 	
-	<update id="createCurrentStateTables" >
+	<update id="createCurrentStateTables" statementType="STATEMENT" >
 		CREATE TABLE IF NOT EXISTS `_sys_current_state_` (
 		  `_id_`  bigint(10) unsigned auto_increment,
 		  `_hash_` varchar(128),
@@ -125,7 +125,7 @@
 	</update>
 	
 	
-	<update id="createNumber2HashTables" >
+	<update id="createNumber2HashTables" statementType="STATEMENT" >
 		CREATE TABLE IF NOT EXISTS `_sys_number_2_hash_` (
 		  `_id_`  bigint(10) unsigned auto_increment,
 		  `_hash_` varchar(128),
@@ -138,7 +138,7 @@
 		) engine=innodb default charset=utf8mb4; 
 	</update>
 	
-	<update id="createTxHash2BlockTables" >
+	<update id="createTxHash2BlockTables" statementType="STATEMENT" >
 		CREATE TABLE IF NOT EXISTS `_sys_tx_hash_2_block_` (
 		  `_id_`  bigint(10) unsigned auto_increment,
 		  `_hash_` varchar(128),
@@ -152,7 +152,7 @@
 		) engine=innodb default charset=utf8mb4; 
 	</update>
 	
-	<update id="createHash2BlockTables" >
+	<update id="createHash2BlockTables" statementType="STATEMENT" >
 		CREATE TABLE IF NOT EXISTS `_sys_hash_2_block_` (
 		  `_id_`  bigint(10) unsigned auto_increment,
 		  `_hash_` varchar(128),
@@ -165,7 +165,7 @@
 		) engine=innodb default charset=utf8mb4; 
 	</update>
 	
-	<update id="createCnsTables" >
+	<update id="createCnsTables" statementType="STATEMENT" >
 		CREATE TABLE IF NOT EXISTS `_sys_cns_` (
 		  `_id_`  bigint(10) unsigned auto_increment,
 		  `_hash_` varchar(128),
@@ -180,7 +180,7 @@
 		) engine=innodb default charset=utf8mb4; 
 	</update>
 	
-	<update id="createSysConfigTables" >
+	<update id="createSysConfigTables" statementType="STATEMENT" >
 		CREATE TABLE IF NOT EXISTS `_sys_config_` (
 		  `_id_`  bigint(10) unsigned auto_increment,
 		  `_hash_` varchar(128),
@@ -194,7 +194,7 @@
 		) engine=innodb default charset=utf8mb4; 
 	</update>
 	
-	<update id="createSysBlock2NoncesTables" >
+	<update id="createSysBlock2NoncesTables" statementType="STATEMENT" >
 		CREATE TABLE IF NOT EXISTS `_sys_block_2_nonces_` (
 		  `_id_`  bigint(10) unsigned auto_increment,
 		  `_hash_` varchar(128),
