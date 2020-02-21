@@ -17,7 +17,7 @@
 	</select>
 	
 	<select id="getMaxBlock" resultType="Integer">
-		select max(`_num_`) from _sys_hash_2_block_
+        select value from _sys_current_state_ where `key`="current_number"
 	</select>
 	
 	<select id="selectTableDataByNum" parameterType="java.lang.Long"
