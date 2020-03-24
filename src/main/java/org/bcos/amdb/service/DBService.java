@@ -31,13 +31,18 @@ import org.bcos.amdb.dto.SelectRequest;
 import org.bcos.amdb.dto.SelectResponse;
 import org.bcos.amdb.dto.SelectResponse2;
 import org.bcos.amdb.dto.TableData;
+import org.bcos.amdb.enums.AmdbExceptionCodeEnums;
+import org.bcos.amdb.exception.AmdbException;
 import org.bcos.amdb.dto.Request;
 import org.bcos.amdb.dto.Response;
+import org.bcos.amdb.dto.SelectByNumRequest;
 
 public class DBService {
 
 	private static Logger logger = LoggerFactory.getLogger(DBService.class);
 	private static final String SYSTABLE = "_sys_tables_";
+	private static final String DETAIL_TABLE_POST_FIX = "d_";
+
 
 	public void initTables() {
 		logger.info("Start create table:");
@@ -109,9 +114,33 @@ public class DBService {
 					result = select2(params);
 				}
 
-			}
+			} else if(header.getOp().equals("selectbynum")){
+                Request<SelectByNumRequest> request = objectMapper.readValue(content,
+                        new TypeReference<Request<SelectByNumRequest>>() {
+                        });
+                SelectByNumRequest params = request.getParams();
+                if(dataMapper.existTable(params.getTableName()) != 1){
+                    throw new AmdbException(AmdbExceptionCodeEnums.NO_TABLE_MESSAGE);
+                }else if(params.getNum() > dataMapper.getMaxBlock()){
+                    throw new AmdbException(AmdbExceptionCodeEnums.BLOCK_NUM_ERROR_MESSAGE);
+                }else{
 
-			else if (header.getOp().equals("commit")) {
+                	String tableName;
+                    if(params.getTableName().equals(SYSTABLE)){
+                        tableName = params.getTableName();
+                    }else{
+                        tableName = getDetailTableName(params.getTableName());
+                    }
+                    List<Map<String, Object>> tempResult = dataMapper.selectTableDataByNum(tableName, params.getNum(), params.getPreIndex(), params.getPageSize());
+                    if(!params.getTableName().equals(SYSTABLE)) {
+                    	for (Map<String, Object> map : tempResult) {
+    						map.remove("pk_id");
+    					}
+                    }
+                    result = tempResult;   
+
+                }               
+            } else if (header.getOp().equals("commit")) {
 				Request<CommitRequest> request = objectMapper.readValue(content,
 						new TypeReference<Request<CommitRequest>>() {
 						});
@@ -163,6 +192,16 @@ public class DBService {
 
 		return response;
 	}
+	
+	private String getDetailTableName(String tableName){
+        String detailTableName;
+        if(!tableName.endsWith("_")){
+            detailTableName = tableName + "_" + DETAIL_TABLE_POST_FIX;
+        }else{
+            detailTableName = tableName + DETAIL_TABLE_POST_FIX;
+        }
+        return detailTableName;
+    }
 
 	public String getSqlForSelect(SelectRequest request) throws Exception {
 		String key = request.getKey();

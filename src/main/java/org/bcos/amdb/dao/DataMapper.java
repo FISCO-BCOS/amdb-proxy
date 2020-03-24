@@ -57,4 +57,10 @@ public interface DataMapper {
 	
 	public	void rollback();
 	
+	public int existTable(String tableName);
+    
+    public int getMaxBlock();
+    
+    public List<Map<String, Object>> selectTableDataByNum(@Param("tableName")String table_name, @Param("num")long num, @Param("preIndex")long preIndex, @Param("pageSize")int pageSize);
+	
 }
