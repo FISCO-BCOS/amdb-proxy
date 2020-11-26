@@ -126,16 +126,15 @@ public class DBService {
                 }else{
 
                 	String tableName;
-                    if(params.getTableName().equals(SYSTABLE)){
+                    if(params.getTableName().equals(SYSTABLE) || params.getNum() == dataMapper.getMaxBlock()){
                         tableName = params.getTableName();
                     }else{
                         tableName = getDetailTableName(params.getTableName());
                     }
                     List<Map<String, Object>> tempResult = dataMapper.selectTableDataByNum(tableName, params.getNum(), params.getPreIndex(), params.getPageSize());
-                    if(!params.getTableName().equals(SYSTABLE)) {
-                    	for (Map<String, Object> map : tempResult) {
-    						map.remove("pk_id");
-    					}
+                    for (Map<String, Object> map : tempResult) {
+    					map.remove("pk_id");
+    					map.remove("_hash_");
                     }
                     result = tempResult;   
 
