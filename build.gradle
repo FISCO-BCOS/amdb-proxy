@@ -63,6 +63,10 @@ dependencies {
    	runtime 'org.springframework:spring-jdbc:4.3.18.RELEASE'
 }
 
+configurations {
+	all*.exclude group: 'org.slf4j', module: 'slf4j-log4j12'
+}
+
 sourceSets {
 	main {
 		java {
